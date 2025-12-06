@@ -1,16 +1,14 @@
 import React from 'react';
-import { Outlet } from 'react-router';
 import NavBar from '../Pages/Shared/NavBar';
-import Footer from '../Pages/Shared/Footer';
+import { Outlet } from 'react-router';
 
-const RootLayout = () => {
+const DashboardLayout = () => {
     return (
         <div className='max-w-11/12 mx-auto'>
             <NavBar></NavBar>
             <Outlet></Outlet>
-            <Footer></Footer>
         </div>
     );
 };
 
-export default RootLayout;
+export default DashboardLayout;
