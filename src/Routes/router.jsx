@@ -3,6 +3,7 @@ import RootLayout from "../Layouts/RootLayout";
 import Home from "../Pages/Home/Home";
 import Books from "../Pages/Books/Books";
 import DashboardLayout from "../Layouts/DashboardLayout";
+import Coverage from "../Pages/Home/Coverage/Coverage";
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,12 @@ export const router = createBrowserRouter([
         {
             index: true,
             element: <Home></Home>
+        },
+        {
+            path:"/coverage",
+            element: <Coverage></Coverage>,
+            loader: ()=> fetch("coverage.json").then(res=> res.json())
+            
         },
         {
             path: "/books",

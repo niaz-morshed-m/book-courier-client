@@ -45,7 +45,7 @@ const links = <>
               {links}
             </ul>
           </div>
-          <img className="btn btn-ghost text-xl" src={logo} alt="" />
+          <img className="btn btn-ghost lg:ml-0 md:ml-0 ml-[-15px] md:[h-40px] lg:h-[40px] h-[30px]" src={logo} alt="" />
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{links}</ul>
@@ -53,7 +53,7 @@ const links = <>
         <div className="navbar-end">
           <Link>
             {" "}
-            <button className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+            <button className="btn lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
               Register
             </button>
           </Link>
