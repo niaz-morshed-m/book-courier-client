@@ -14,7 +14,7 @@ const Register = () => {
   });
 
   // auth extraction
-  const { registerUser } = useAuth();
+  const { registerUser, googleLogin } = useAuth();
 
   // register handle function
   const handleRegister = (data) => {
@@ -28,6 +28,19 @@ const Register = () => {
         const errorMessage = error.message;
         console.log(errorMessage);
       });
+  };
+
+  //   handle google signin function
+  const handleGoogleLogin = () => {
+    googleLogin()
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage)
+      });
+
   };
 
   return (
@@ -121,7 +134,10 @@ const Register = () => {
 
       <p className="text-center">Or</p>
 
-      <button className="btn bg-white text-black border-[#e5e5e5] w-full">
+      <button
+        onClick={handleGoogleLogin}
+        className="btn bg-white text-black border-[#e5e5e5] w-full"
+      >
         <svg
           aria-label="Google logo"
           width="16"

@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from "../../assets/Capwswsture-Photoroom.png"
 import { Link, NavLink } from 'react-router';
+import { IoMdPersonAdd } from 'react-icons/io';
+import { MdOutlineLogin } from 'react-icons/md';
 const NavBar = () => {
 
 
@@ -45,7 +47,11 @@ const links = <>
               {links}
             </ul>
           </div>
-          <img className="btn btn-ghost lg:ml-0 md:ml-0 ml-[-15px] md:[h-40px] lg:h-[40px] h-[30px]" src={logo} alt="" />
+          <img
+            className="btn btn-ghost lg:ml-0 md:ml-0 ml-[-15px] md:[h-40px] lg:h-[40px] h-[30px]"
+            src={logo}
+            alt=""
+          />
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{links}</ul>
@@ -54,12 +60,18 @@ const links = <>
           <Link to="/register">
             {" "}
             <button className="btn lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+              <span className="mr-1">
+                <IoMdPersonAdd />
+              </span>{" "}
               Register
             </button>
           </Link>
           <Link to="/login">
             {" "}
             <button className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+              <span className="text-[18px] font-semibold">
+                <MdOutlineLogin />
+              </span>{" "}
               Login
             </button>
           </Link>
