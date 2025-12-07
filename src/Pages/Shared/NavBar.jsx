@@ -51,13 +51,13 @@ const links = <>
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
-          <Link>
+          <Link to="/register">
             {" "}
             <button className="btn lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
               Register
             </button>
           </Link>
-          <Link>
+          <Link to="/login">
             {" "}
             <button className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
               Login
