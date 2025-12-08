@@ -2,9 +2,11 @@ import React from 'react';
 import logo from "../../assets/Capwswsture-Photoroom.png"
 import { Link, NavLink } from 'react-router';
 import { IoMdPersonAdd } from 'react-icons/io';
-import { MdOutlineLogin } from 'react-icons/md';
+import { MdOutlineLogin, MdOutlineLogout } from 'react-icons/md';
+import useAuth from '../../hooks/useAuth';
 const NavBar = () => {
 
+const { user, logout } = useAuth();
 
 const links = <>
 <li>
@@ -18,7 +20,16 @@ const links = <>
 </li>
 </>
 
-
+// handle logout function
+const handleLogout =()=>{
+    logout()
+      .then(() => {
+        console.log("Logged out successfully");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+}
     return (
       <div className="navbar bg-base-100 shadow-sm">
         <div className="navbar-start">
@@ -57,24 +68,35 @@ const links = <>
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
-          <Link to="/register">
-            {" "}
-            <button className="btn lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
-              <span className="mr-1">
-                <IoMdPersonAdd />
-              </span>{" "}
-              Register
-            </button>
-          </Link>
-          <Link to="/login">
-            {" "}
-            <button className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+          {user ? (
+            <button onClick={handleLogout} className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
               <span className="text-[18px] font-semibold">
-                <MdOutlineLogin />
+                <MdOutlineLogout />
               </span>{" "}
-              Login
+              Logout
             </button>
-          </Link>
+          ) : (
+            <>
+              <Link to="/register">
+                {" "}
+                <button className="btn lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+                  <span className="mr-1">
+                    <IoMdPersonAdd />
+                  </span>{" "}
+                  Register
+                </button>
+              </Link>
+              <Link to="/login">
+                {" "}
+                <button className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+                  <span className="text-[18px] font-semibold">
+                    <MdOutlineLogin />
+                  </span>{" "}
+                  Login
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     );

@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import useAuth from "../../hooks/useAuth";
 
 const Register = () => {
+    
   // hook form related stuffs
   const {
     register,
@@ -14,15 +15,28 @@ const Register = () => {
   });
 
   // auth extraction
-  const { registerUser, googleLogin } = useAuth();
+  const { registerUser, googleLogin, profileUpdate } = useAuth();
 
   // register handle function
   const handleRegister = (data) => {
     registerUser(data.email, data.password)
       .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
+       
+profileUpdate({
+  displayName: data.name,
+  photoURL: data.photo,
+})
+  .then(() => {
+    // Profile updated!
+    // ...
+  })
+  .catch(() => {
+    // An error occurred
+    // ...
+  });
+
+console.log(userCredential)
+
       })
       .catch((error) => {
         const errorMessage = error.message;
