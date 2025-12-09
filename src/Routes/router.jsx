@@ -6,6 +6,7 @@ import DashboardLayout from "../Layouts/DashboardLayout";
 import Coverage from "../Pages/Home/Coverage/Coverage";
 import Register from "../Pages/Authentication/Register";
 import Login from "../Pages/Authentication/Login";
+import BookDetails from "../Pages/BookDetails/BookDetails";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
         {
             path: "/books",
             element: <Books></Books>
+        },
+        {
+            path: "book/details/:id",
+            element: <BookDetails></BookDetails>
         },
         {
             path:"/register",

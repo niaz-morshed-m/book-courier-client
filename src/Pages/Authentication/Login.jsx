@@ -4,6 +4,8 @@ import { Link } from "react-router";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
+
+    // hook form related stuffs
   const {
     register,
     handleSubmit,
@@ -12,9 +14,10 @@ const Login = () => {
     mode: "onChange", 
   });
 
-
+// auth extraction
 const {signinUser} = useAuth()
 
+// login handle function
   const handleLogin = (data) => {
    signinUser(data.email, data.password)
      .then((userCredential) => {
@@ -24,7 +27,6 @@ const {signinUser} = useAuth()
      })
      .catch((error) => {
        const errorMessage = error.message;
-
        console.log(errorMessage)
      });
   };
