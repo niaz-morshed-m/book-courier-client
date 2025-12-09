@@ -1,34 +1,55 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-    // hook form related stuffs
+  // hook form related stuffs
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "onChange", 
+    mode: "onChange",
   });
 
-// auth extraction
-const {signinUser} = useAuth()
+  // auth extraction
+  const { signinUser, googleLogin } = useAuth();
 
-// login handle function
+  // login handle function
   const handleLogin = (data) => {
-   signinUser(data.email, data.password)
-     .then((userCredential) => {
-       // Signed in
-       const user = userCredential.user;
-       console.log(user)
-     })
-     .catch((error) => {
-       const errorMessage = error.message;
-       console.log(errorMessage)
-     });
+    signinUser(data.email, data.password)
+      .then(() => {
+        // Signed in
+        if (location.state) {
+          navigate(location.state);
+        } else {
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
+  };
+
+  //   handle google signin function
+  const handleGoogleLogin = () => {
+    googleLogin()
+      .then(() => {
+        if (location.state) {
+          navigate(location.state);
+        } else {
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
   };
 
   return (
@@ -96,7 +117,10 @@ const {signinUser} = useAuth()
 
       <p className="text-center">Or</p>
 
-      <button className="btn bg-white text-black border-[#e5e5e5] w-full">
+      <button
+        onClick={handleGoogleLogin}
+        className="btn bg-white text-black border-[#e5e5e5] w-full"
+      >
         <svg
           aria-label="Google logo"
           width="16"

@@ -7,42 +7,46 @@ import Coverage from "../Pages/Home/Coverage/Coverage";
 import Register from "../Pages/Authentication/Register";
 import Login from "../Pages/Authentication/Login";
 import BookDetails from "../Pages/BookDetails/BookDetails";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout></RootLayout>,
     children: [
-        {
-            index: true,
-            element: <Home></Home>
-        },
-        {
-            path:"/coverage",
-            element: <Coverage></Coverage>,
-            loader: ()=> fetch("coverage.json").then(res=> res.json())
-            
-        },
-        {
-            path: "/books",
-            element: <Books></Books>
-        },
-        {
-            path: "book/details/:id",
-            element: <BookDetails></BookDetails>
-        },
-        {
-            path:"/register",
-            element: <Register></Register>
-        },
-        {
-            path: "/login",
-            element: <Login></Login>
-        }
-    ]
+      {
+        index: true,
+        element: <Home></Home>,
+      },
+      {
+        path: "/coverage",
+        element: <Coverage></Coverage>,
+        loader: () => fetch("coverage.json").then((res) => res.json()),
+      },
+      {
+        path: "/books",
+        element: <Books></Books>,
+      },
+      {
+        path: "book/details/:id",
+        element: (
+          <PrivateRoute>
+            <BookDetails></BookDetails>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/register",
+        element: <Register></Register>,
+      },
+      {
+        path: "/login",
+        element: <Login></Login>,
+      },
+    ],
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout></DashboardLayout>
-  }
+    element: <DashboardLayout></DashboardLayout>,
+  },
 ]);

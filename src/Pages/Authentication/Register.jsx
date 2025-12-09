@@ -1,10 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 
 const Register = () => {
-    
+    const location = useLocation();
+    const navigate = useNavigate();
   // hook form related stuffs
   const {
     register,
@@ -20,7 +21,7 @@ const Register = () => {
   // register handle function
   const handleRegister = (data) => {
     registerUser(data.email, data.password)
-      .then((userCredential) => {
+      .then(() => {
        
 profileUpdate({
   displayName: data.name,
@@ -35,7 +36,11 @@ profileUpdate({
     // ...
   });
 
-console.log(userCredential)
+ if (location.state) {
+   navigate(location.state);
+ } else {
+   navigate("/");
+ }
 
       })
       .catch((error) => {
@@ -47,8 +52,12 @@ console.log(userCredential)
   //   handle google signin function
   const handleGoogleLogin = () => {
     googleLogin()
-      .then((result) => {
-        console.log(result)
+      .then(() => {
+        if (location.state) {
+          navigate(location.state);
+        } else {
+          navigate("/");
+        }
       })
       .catch((error) => {
         const errorMessage = error.message;
