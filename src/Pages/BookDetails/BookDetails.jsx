@@ -48,10 +48,13 @@ const {user} = useAuth()
 
   const onSubmit = (data) => {
     console.log("Form Data:", data);
+    data.bookName = book.title
+    data.author = book.author
     data.cost = total
     data.bookId = book._id
     data.status = "pending"
     data.paymentStatus = "unpaid"
+    data.image = book.image
     axiosSecure.post('/order', data).then(res=>{
         console.log(res.data)
     })
