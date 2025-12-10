@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   FaCheckCircle,
   FaStar,
@@ -7,26 +7,30 @@ import {
   FaPhone,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-import { useForm } from "react-hook-form"; // 1. Import hook
+import { useForm } from "react-hook-form";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { IoIosInformationCircle } from "react-icons/io";
+import useAuth from "../../hooks/useAuth";
 
 const BookDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const modalRef = useRef(null);
 
-  // 2. Initialize React Hook Form
+  const [quantity, setQuantity] = useState(1);
+  const [total, setTotal] = useState(0);
+  const deliveryCharge = 85; // Fixed delivery charge
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
-
+const {user} = useAuth()
   const { data: book = [] } = useQuery({
     queryKey: ["book"],
     queryFn: async () => {
@@ -35,15 +39,23 @@ const BookDetails = () => {
     },
   });
 
-  // 3. Handle Form Submission
+  // Update total whenever quantity or book price changes
+  useEffect(() => {
+    if (book.price) {
+      setTotal(book.price * quantity + deliveryCharge);
+    }
+  }, [quantity, book.price]);
+
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-
-    // You can send 'data' to your backend here using axiosSecure
-
-    // Close the modal after submission
+    data.cost = total
+    data.bookId = book._id
+    data.status = "pending"
+    data.paymentStatus = "unpaid"
+    axiosSecure.post('/order', data).then(res=>{
+        console.log(res.data)
+    })
     modalRef.current.close();
-    // Optional: Reset form fields
     reset();
   };
 
@@ -98,7 +110,9 @@ const BookDetails = () => {
           </div>
 
           {stockCheck()}
-          <div className="text-3xl font-bold text-blue-500 my-2">$15.99</div>
+          <div className="text-3xl font-bold text-blue-500 my-2">
+            ${book.price}
+          </div>
 
           <dialog ref={modalRef} id="my_modal_4" className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
@@ -106,7 +120,6 @@ const BookDetails = () => {
                 Place Your Order
               </h3>
 
-              {/* 4. Add ID and onSubmit to the form */}
               <form
                 id="order-form"
                 onSubmit={handleSubmit(onSubmit)}
@@ -122,6 +135,7 @@ const BookDetails = () => {
                     </label>
                     <input
                       type="text"
+                      value={user.displayName}
                       placeholder="John Doe"
                       className="input input-bordered w-full"
                       {...register("fullName", { required: true })}
@@ -140,6 +154,7 @@ const BookDetails = () => {
                       </span>
                     </label>
                     <input
+                    value={user.email}
                       type="email"
                       placeholder="john@example.com"
                       className="input input-bordered w-full"
@@ -170,6 +185,41 @@ const BookDetails = () => {
                       Phone is required
                     </span>
                   )}
+                </div>
+
+                {/* Quantity Field */}
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text flex items-center gap-2">
+                      Quantity
+                    </span>
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="1"
+                    value={quantity}
+                    min="1"
+                    className="input input-bordered w-full"
+                    {...register("quantity", {
+                      required: true,
+                      min: 1,
+                      valueAsNumber: true,
+                      onChange: (e) => setQuantity(Number(e.target.value)),
+                    })}
+                  />
+                  {errors.quantity && (
+                    <span className="text-red-500 text-xs mt-1">
+                      Quantity must be at least 1
+                    </span>
+                  )}
+
+                  {/* Live Total */}
+                  <div>
+                    <p className="font-semibold mt-2">
+                      Total Payable Amount:{" "}
+                      <span className="text-blue-500">{total} Tk</span>
+                    </p>
+                  </div>
                 </div>
 
                 {/* --- Detailed Address Section --- */}
@@ -256,14 +306,11 @@ const BookDetails = () => {
               </form>
 
               <div className="modal-action mt-8">
-                {/* Form for closing the modal */}
                 <form method="dialog" className="flex gap-2">
                   <button className="btn">Cancel</button>
-
-                  {/* 5. Submit Button linked to the form above */}
                   <button
                     type="submit"
-                    form="order-form" // This matches the ID of the form above
+                    form="order-form"
                     className="btn btn-primary"
                   >
                     Place Order
