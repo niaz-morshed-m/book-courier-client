@@ -8,7 +8,7 @@ const MyOrders = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const { data: orders = [] } = useQuery({
+  const { data: orders = [], refetch } = useQuery({
     queryKey: ["myOrders", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/order/${user.email}`);
@@ -16,7 +16,16 @@ const MyOrders = () => {
     },
   });
 
-  console.log(orders);
+ const cancelStatus = (id) => {
+   axiosSecure
+     .patch(`/order/${id}`, { status: "cancelled" })
+     .then((res) =>{
+        refetch()
+        console.log(res.data)
+     } )
+     .catch((err) => console.log(err));
+ };
+
   return (
     <div className="overflow-x-auto">
       <table className="table">
@@ -66,7 +75,7 @@ const MyOrders = () => {
               </td>
               <th>
                 {order.status === "pending" && (
-                  <button className="btn  btn-xs">Cancel</button>
+                  <button onClick={()=>cancelStatus(order._id)} className="btn  btn-xs">Cancel</button>
                 )}
               </th>
             </tr>
