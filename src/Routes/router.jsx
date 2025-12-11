@@ -11,6 +11,8 @@ import PrivateRoute from "./PrivateRoute";
 import DashboardHome from "../Pages/Dashboard/DashBoardHome/DashboardHome";
 import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
 import Payment from "../Pages/Payment/Payment";
+import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
+import PaymentFailed from "../Pages/Payment/PaymentFailed";
 
 export const router = createBrowserRouter([
   {
@@ -52,11 +54,10 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: <DashboardLayout></DashboardLayout>,
     children: [
-
-        {
-            index: true,
-            element: <DashboardHome></DashboardHome>
-        },
+      {
+        index: true,
+        element: <DashboardHome></DashboardHome>,
+      },
 
       {
         path: "/dashboard/orders",
@@ -64,8 +65,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/payment/:id",
-        element: <Payment></Payment>
-      }
+        element: <Payment></Payment>,
+      },
+      {
+        path: "/dashboard/payment-success",
+        element: <PaymentSuccess></PaymentSuccess>,
+      },
+      {
+        path: "/dashboard/payment-cancelled",
+        element: <PaymentFailed></PaymentFailed>
+      },
     ],
   },
 ]);

@@ -15,7 +15,12 @@ return res.data
     }
 })
 
-console.log(order)
+const handlePayment =  ()=>{
+ axiosSecure.post("/create-checkout-session", order ).then(res=>{
+   window.location.href =res.data.url
+ })
+
+}
 
     return (
       <div className="text-center m-3 space-y-7">
@@ -24,7 +29,7 @@ console.log(order)
           Please Pay ${order.cost} for{" "}
           <span className="text-primary">{order.bookName}</span>
         </span> <br></br>
-        <button className='btn bg-primary my-3'>Proceed to Pay</button>
+        <button onClick={handlePayment} className='btn bg-primary my-3'>Proceed to Pay</button>
       </div>
     );
 };
