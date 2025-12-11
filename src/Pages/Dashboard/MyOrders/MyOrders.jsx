@@ -2,6 +2,7 @@ import React from "react";
 import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Link } from "react-router";
 
 
 const MyOrders = () => {
@@ -11,7 +12,7 @@ const MyOrders = () => {
   const { data: orders = [], refetch } = useQuery({
     queryKey: ["myOrders", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/order/${user.email}`);
+      const res = await axiosSecure.get(`/order/email/${user.email}`);
       return res.data;
     },
   });
@@ -66,16 +67,23 @@ const MyOrders = () => {
               <td>
                 {order.status !== "cancelled" &&
                   (order.paymentStatus === "unpaid" ? (
-                    <button className="btn btn-sm bg-primary text-accent">
-                      Pay
-                    </button>
+                    <Link to={`/dashboard/payment/${order._id}`}>
+                      <button className="btn btn-sm bg-primary text-accent">
+                        Pay
+                      </button>
+                    </Link>
                   ) : (
                     <span>Paid</span>
                   ))}
               </td>
               <th>
                 {order.status === "pending" && (
-                  <button onClick={()=>cancelStatus(order._id)} className="btn  btn-xs">Cancel</button>
+                  <button
+                    onClick={() => cancelStatus(order._id)}
+                    className="btn  btn-xs"
+                  >
+                    Cancel
+                  </button>
                 )}
               </th>
             </tr>

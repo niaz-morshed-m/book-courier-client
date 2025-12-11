@@ -10,6 +10,7 @@ import BookDetails from "../Pages/BookDetails/BookDetails";
 import PrivateRoute from "./PrivateRoute";
 import DashboardHome from "../Pages/Dashboard/DashBoardHome/DashboardHome";
 import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
+import Payment from "../Pages/Payment/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
         path: "/dashboard/orders",
         element: <MyOrders></MyOrders>,
       },
+      {
+        path: "/dashboard/payment/:id",
+        element: <Payment></Payment>
+      }
     ],
   },
 ]);
