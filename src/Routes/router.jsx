@@ -13,6 +13,7 @@ import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
 import Payment from "../Pages/Payment/Payment";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import PaymentFailed from "../Pages/Payment/PaymentFailed";
+import Invoices from "../Pages/Invoice/Invoices";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/payment-cancelled",
         element: <PaymentFailed></PaymentFailed>
+      },
+      {
+        path: "/dashboard/invoices",
+        element: <Invoices></Invoices>
       },
     ],
   },

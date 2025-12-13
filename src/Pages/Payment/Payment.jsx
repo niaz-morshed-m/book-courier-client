@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
-import { useParams } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { useParams } from 'react-router';
 
 const Payment = () => {
 
@@ -15,12 +14,18 @@ return res.data
     }
 })
 
+
+
+
+
 const handlePayment =  ()=>{
  axiosSecure.post("/create-checkout-session", order ).then(res=>{
    window.location.href =res.data.url
  })
 
 }
+
+
 
     return (
       <div className="text-center m-3 space-y-7">
