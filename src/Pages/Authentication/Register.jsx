@@ -2,10 +2,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Register = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecure()
   // hook form related stuffs
   const {
     register,
@@ -23,6 +25,16 @@ const Register = () => {
     registerUser(data.email, data.password)
       .then(() => {
        
+        const userInfo = {
+            name: data.name,
+            email: data.email,
+            photoURL: data.photo
+        }
+
+        axiosSecure.post('/user/create', userInfo).then(res=>{
+           console.log(res)
+        })
+
 profileUpdate({
   displayName: data.name,
   photoURL: data.photo,
@@ -52,7 +64,20 @@ profileUpdate({
   //   handle google signin function
   const handleGoogleLogin = () => {
     googleLogin()
-      .then(() => {
+      .then((result) => {
+        const user = result.user
+ const userInfo = {
+   name: user.displayName,
+   email: user.email,
+   photoURL: user.photoURL,
+ };
+
+
+axiosSecure.post('/user/create', userInfo).then(res=>{
+    console.log(res)
+})
+
+console.log(user)
         if (location.state) {
           navigate(location.state);
         } else {

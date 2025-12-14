@@ -2,11 +2,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+const axiosSecure = useAxiosSecure()
   // hook form related stuffs
   const {
     register,
@@ -39,7 +40,19 @@ const Login = () => {
   //   handle google signin function
   const handleGoogleLogin = () => {
     googleLogin()
-      .then(() => {
+      .then((result) => {
+
+     const user = result.user;
+     const userInfo = {
+       name: user.displayName,
+       email: user.email,
+       photoURL: user.photoURL,
+     };
+
+axiosSecure.post('/user/create', userInfo).then(res=>{
+  console.log(res)
+})
+
         if (location.state) {
           navigate(location.state);
         } else {

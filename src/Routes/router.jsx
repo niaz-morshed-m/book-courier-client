@@ -14,6 +14,7 @@ import Payment from "../Pages/Payment/Payment";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import PaymentFailed from "../Pages/Payment/PaymentFailed";
 import Invoices from "../Pages/Invoice/Invoices";
+import Users from "../Pages/Dashboard/Users/Users";
 
 export const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ export const router = createBrowserRouter([
         path: "/dashboard/invoices",
         element: <Invoices></Invoices>
       },
+      {
+        path: '/dashboard/users',
+        element: <Users></Users>
+      }
     ],
   },
 ]);

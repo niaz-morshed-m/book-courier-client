@@ -95,6 +95,16 @@ const DashboardLayout = () => {
                       <span className="is-drawer-close:hidden">Invoices</span>
                     </button>
                   </NavLink>
+                  <NavLink to="/dashboard/users">
+                    <button
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Order"
+                    >
+                      {/* Settings icon */}
+                      <HiMiniShoppingBag />
+                      <span className="is-drawer-close:hidden">Users</span>
+                    </button>
+                  </NavLink>
                 </li>
               </ul>
             </div>
