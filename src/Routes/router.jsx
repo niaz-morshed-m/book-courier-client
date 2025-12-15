@@ -15,6 +15,8 @@ import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import PaymentFailed from "../Pages/Payment/PaymentFailed";
 import Invoices from "../Pages/Invoice/Invoices";
 import Users from "../Pages/Dashboard/Users/Users";
+import ManageBooks from "../Pages/Dashboard/ManageBooks/ManageBooks";
+import AddBooks from "../Pages/AddBooks/AddBooks";
 
 export const router = createBrowserRouter([
   {
@@ -84,6 +86,14 @@ export const router = createBrowserRouter([
       {
         path: '/dashboard/users',
         element: <Users></Users>
+      },
+      {
+        path: '/dashboard/manage-books',
+        element: <ManageBooks></ManageBooks>
+      },
+      {
+        path: '/dashboard/add-books',
+        element: <AddBooks></AddBooks>
       }
     ],
   },

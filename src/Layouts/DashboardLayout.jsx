@@ -35,7 +35,7 @@ const DashboardLayout = () => {
                   <path d="M14 10l2 2l-2 2"></path>
                 </svg>
               </label>
-              <Link to='/'>
+              <Link to="/">
                 <div className="px-4">
                   {" "}
                   <img
@@ -103,6 +103,30 @@ const DashboardLayout = () => {
                       {/* Settings icon */}
                       <HiMiniShoppingBag />
                       <span className="is-drawer-close:hidden">Users</span>
+                    </button>
+                  </NavLink>
+                  <NavLink to="/dashboard/manage-books">
+                    <button
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Order"
+                    >
+                      {/* Settings icon */}
+                      <HiMiniShoppingBag />
+                      <span className="is-drawer-close:hidden">
+                        Manage Books
+                      </span>
+                    </button>
+                  </NavLink>
+                  <NavLink to="/dashboard/add-books">
+                    <button
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Order"
+                    >
+                      {/* Settings icon */}
+                      <HiMiniShoppingBag />
+                      <span className="is-drawer-close:hidden">
+                        Add Books
+                      </span>
                     </button>
                   </NavLink>
                 </li>
