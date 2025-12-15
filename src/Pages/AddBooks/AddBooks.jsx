@@ -26,6 +26,7 @@ const axiosSecure = useAxiosSecure()
 
   // 3. This function runs ONLY if validation passes
   const onSubmit = (data) => {
+  
 data.librarianEmail = user.email
 data.librarianName = user.displayName
 data.price = parseInt(data.price)
@@ -58,7 +59,7 @@ data.addedAt = new Date()
                   placeholder="e.g. To Kill a Mockingbird"
                   className="input input-bordered w-full"
                   // 5. Connect input to form using register
-                  {...register("bookTitle", { required: true })}
+                  {...register("title", { required: true })}
                 />
                 {/* 6. Display error if field is empty */}
                 {errors.bookTitle && (
@@ -79,7 +80,7 @@ data.addedAt = new Date()
                   type="text"
                   placeholder="e.g. Harper Lee"
                   className="input input-bordered w-full"
-                  {...register("authorName", { required: true })}
+                  {...register("author", { required: true })}
                 />
                 {errors.authorName && (
                   <span className="text-error text-sm mt-1">
@@ -99,7 +100,7 @@ data.addedAt = new Date()
                   type="url"
                   placeholder="https://..."
                   className="input input-bordered w-full"
-                  {...register("imageURL")}
+                  {...register("image")}
                 />
               </div>
 

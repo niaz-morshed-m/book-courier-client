@@ -129,6 +129,18 @@ const DashboardLayout = () => {
                       </span>
                     </button>
                   </NavLink>
+                  <NavLink to="/dashboard/my-books">
+                    <button
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Order"
+                    >
+                      {/* Settings icon */}
+                      <HiMiniShoppingBag />
+                      <span className="is-drawer-close:hidden">
+                        My Books
+                      </span>
+                    </button>
+                  </NavLink>
                 </li>
               </ul>
             </div>

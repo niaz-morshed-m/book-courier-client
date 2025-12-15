@@ -17,6 +17,7 @@ import Invoices from "../Pages/Invoice/Invoices";
 import Users from "../Pages/Dashboard/Users/Users";
 import ManageBooks from "../Pages/Dashboard/ManageBooks/ManageBooks";
 import AddBooks from "../Pages/AddBooks/AddBooks";
+import MyBooks from "../Pages/Dashboard/MyBooks/MyBooks";
 
 export const router = createBrowserRouter([
   {
@@ -94,6 +95,10 @@ export const router = createBrowserRouter([
       {
         path: '/dashboard/add-books',
         element: <AddBooks></AddBooks>
+      },
+      {
+        path: '/dashboard/my-books',
+        element: <MyBooks></MyBooks>
       }
     ],
   },
