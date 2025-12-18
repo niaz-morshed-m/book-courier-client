@@ -55,6 +55,7 @@ const {user} = useAuth()
     data.status = "pending"
     data.paymentStatus = "unpaid"
     data.image = book.image
+    data.librarianEmail = book.librarianEmail
     axiosSecure.post('/order', data).then(res=>{
         console.log(res.data)
     })

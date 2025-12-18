@@ -16,7 +16,7 @@ const MyOrders = () => {
       return res.data;
     },
   });
-
+console.log(orders)
  const cancelStatus = (id) => {
    axiosSecure
      .patch(`/order/${id}`, { status: "cancelled" })

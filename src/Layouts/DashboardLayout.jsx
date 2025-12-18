@@ -5,6 +5,8 @@ import logo from '../assets/Capwswsture-Photoroom.png'
 import { Link, NavLink, Outlet } from 'react-router';
 import { RxDashboard } from 'react-icons/rx';
 import { HiMiniShoppingBag } from 'react-icons/hi2';
+import { FiBookOpen, FiFileText, FiLayers, FiPlusCircle, FiUsers } from 'react-icons/fi';
+import { MdManageAccounts } from 'react-icons/md';
 
 const DashboardLayout = () => {
     return (
@@ -77,7 +79,7 @@ const DashboardLayout = () => {
                 <li>
                   <NavLink to="/dashboard/orders">
                     <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
                       data-tip="My Order"
                     >
                       {/* Settings icon */}
@@ -87,31 +89,31 @@ const DashboardLayout = () => {
                   </NavLink>
                   <NavLink to="/dashboard/invoices">
                     <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
                       data-tip="My Order"
                     >
                       {/* Settings icon */}
-                      <HiMiniShoppingBag />
+                      <FiFileText />
                       <span className="is-drawer-close:hidden">Invoices</span>
                     </button>
                   </NavLink>
                   <NavLink to="/dashboard/users">
                     <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
                       data-tip="My Order"
                     >
                       {/* Settings icon */}
-                      <HiMiniShoppingBag />
+                      <FiUsers />
                       <span className="is-drawer-close:hidden">Users</span>
                     </button>
                   </NavLink>
                   <NavLink to="/dashboard/manage-books">
                     <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
                       data-tip="My Order"
                     >
                       {/* Settings icon */}
-                      <HiMiniShoppingBag />
+                      <MdManageAccounts />
                       <span className="is-drawer-close:hidden">
                         Manage Books
                       </span>
@@ -119,25 +121,33 @@ const DashboardLayout = () => {
                   </NavLink>
                   <NavLink to="/dashboard/add-books">
                     <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
                       data-tip="My Order"
                     >
                       {/* Settings icon */}
-                      <HiMiniShoppingBag />
-                      <span className="is-drawer-close:hidden">
-                        Add Books
-                      </span>
+                      <FiPlusCircle />
+                      <span className="is-drawer-close:hidden">Add Books</span>
                     </button>
                   </NavLink>
                   <NavLink to="/dashboard/my-books">
                     <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
                       data-tip="My Order"
                     >
                       {/* Settings icon */}
-                      <HiMiniShoppingBag />
+                      <FiBookOpen />
+                      <span className="is-drawer-close:hidden">My Books</span>
+                    </button>
+                  </NavLink>
+                  <NavLink to="/dashboard/my-book-orders">
+                    <button
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                      data-tip="My Order"
+                    >
+                      {/* Settings icon */}
+                      <FiLayers />
                       <span className="is-drawer-close:hidden">
-                        My Books
+                        Orders of My Books
                       </span>
                     </button>
                   </NavLink>

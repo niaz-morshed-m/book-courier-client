@@ -23,7 +23,7 @@ const { data: books = [] } = useQuery({
           Our <span className="text-primary"> Books </span> Collections{" "}
         </p>
 
-        <div className="grid grid-cols-4 gap-5 p-3.5">
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 p-3.5">
           {books.map((book) => (
             <BookCard key={book._id} book={book}></BookCard>
           ))}

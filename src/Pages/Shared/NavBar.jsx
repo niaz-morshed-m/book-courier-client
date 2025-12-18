@@ -68,8 +68,23 @@ const handleLogout =()=>{
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
+          {user && (
+            <Link to="/profile">
+              <div className="avatar relative group m-4">
+                <div className="w-7 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 cursor-pointer">
+                  <img src={ user.photoURL} alt="User profile avatar" />
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-[-2.5rem] bg-gray-800 text-white text-sm px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    {user.displayName || "No Name"}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
           {user ? (
-            <button onClick={handleLogout} className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+            <button
+              onClick={handleLogout}
+              className="btn m-1 lg:btn-md md:btn-md btn-xs bg-primary text-accent border-5 border-primary"
+            >
               <span className="text-[18px] font-semibold">
                 <MdOutlineLogout />
               </span>{" "}
@@ -79,7 +94,7 @@ const handleLogout =()=>{
             <>
               <Link to="/register">
                 {" "}
-                <button className="btn lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+                <button className="btn lg:btn-md md:btn-md btn-xs bg-primary text-accent border-5 border-primary">
                   <span className="mr-1">
                     <IoMdPersonAdd />
                   </span>{" "}
@@ -88,7 +103,7 @@ const handleLogout =()=>{
               </Link>
               <Link to="/login">
                 {" "}
-                <button className="btn m-1 lg:btn-md md:btn-md btn-sm bg-primary text-accent border-5 border-primary">
+                <button className="btn m-1 lg:btn-md md:btn-md btn-xs bg-primary text-accent border-5 border-primary">
                   <span className="text-[18px] font-semibold">
                     <MdOutlineLogin />
                   </span>{" "}
