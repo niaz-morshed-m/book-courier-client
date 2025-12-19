@@ -43,6 +43,7 @@ const {user} = useAuth()
   useEffect(() => {
     if (book.price) {
       setTotal(book.price * quantity + deliveryCharge);
+      
     }
   }, [quantity, book.price]);
 
@@ -158,7 +159,7 @@ const {user} = useAuth()
                       </span>
                     </label>
                     <input
-                    value={user.email}
+                      value={user.email}
                       type="email"
                       placeholder="john@example.com"
                       className="input input-bordered w-full"
@@ -218,12 +219,14 @@ const {user} = useAuth()
                   )}
 
                   {/* Live Total */}
-                  <div>
-                    <p className="font-semibold mt-2">
-                      Total Payable Amount:{" "}
-                      <span className="text-blue-500">{total} Tk</span>
-                    </p>
-                  </div>
+                  {quantity > 0 && (
+                    <div>
+                      <p className="font-semibold mt-2">
+                        Total Payable Amount (With $85 Delivery Charge) :{" "}
+                        <span className="text-blue-500">${total}</span>
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* --- Detailed Address Section --- */}

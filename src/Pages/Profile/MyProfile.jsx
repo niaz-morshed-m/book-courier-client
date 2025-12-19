@@ -1,49 +1,46 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const MyProfile = () => {
   const { user, setUser, profileUpdate } = useAuth();
-
+  const axiosSecure = useAxiosSecure();
+  const modalRef = useRef();
   const [error, setError] = useState("");
   const handleUpdate = (e) => {
+    e.preventDefault();
+
     const form = e.target;
     const name = form.name.value;
     const photo = form.photo.value;
+
     if (name === user.displayName) {
-      e.preventDefault();
       setError("Give a name without current");
       return;
     }
 
-   profileUpdate({
-     displayName: name,
-     photoURL: photo,
-   })
-     .then(() => {
-       setUser({
-         ...user,
-         displayName: name,
-         photoURL: photo,
-       });
-     })
-     .catch((error) => {
-       const errorMessage = error.message;
-       e.preventDefault();
-       setError(errorMessage);
-     });
-
-    const newUser = {
-      name: name,
-      photoUrl: photo,
-    };
-
-    fetch(`https://krishi-link-server-ten.vercel.app/user/${user.email}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(newUser),
+    profileUpdate({
+      displayName: name,
+      photoURL: photo,
     })
-      .then((res) => res.json())
-      .then(() => {});
+      .then(() => {
+        setUser({
+          ...user,
+          displayName: name,
+          photoURL: photo,
+        });
+
+        const newUser = {
+          name,
+          photoUrl: photo,
+        };
+
+        axiosSecure.patch(`/user/${user.email}`, newUser);
+        modalRef.current.close();
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   };
   return (
     <div className="w-full max-w-3xl mx-auto text-center">
@@ -79,7 +76,7 @@ const MyProfile = () => {
         </div>
       </section>
 
-      <dialog id="my_modal_3" className="modal">
+      <dialog ref={modalRef} className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -91,6 +88,7 @@ const MyProfile = () => {
               Your Name
             </label>
             <input
+            defaultValue={user?.displayName}
               name="name"
               type="text"
               className="input w-full"
@@ -101,6 +99,7 @@ const MyProfile = () => {
             </label>
             <input
               name="photo"
+              defaultValue={user?.photoURL}
               type="url"
               className="input w-full"
               placeholder="Photo URL"
@@ -114,7 +113,7 @@ const MyProfile = () => {
       </dialog>
       <div className="mt-8">
         <button
-          onClick={() => document.getElementById("my_modal_3").showModal()}
+          onClick={() => modalRef.current.showModal()}
           className="btn  bg-primary text-white"
         >
           Update Profile

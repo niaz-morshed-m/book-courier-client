@@ -67,7 +67,8 @@ const profileUpdate = (obj)=>{
     user,
     logout,
     loading,
-    profileUpdate
+    profileUpdate,
+    setUser
   };
 
   return <AuthContext value={authInfo}>{children}</AuthContext>;

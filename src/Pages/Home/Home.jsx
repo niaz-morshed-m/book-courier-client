@@ -4,6 +4,7 @@ import Coverage from './Coverage/Coverage';
 import CoverageBanner from './Coverage/CoverageBanner';
 import LatestBooks from './LatestBooks/LatestBooks';
 import WhyUs from './WhyUs/WhyUs';
+import HowItWorks from './HowItWorks/HowItWorks';
 
 const Home = () => {
     return (
@@ -20,7 +21,9 @@ const Home = () => {
         <div>
           <WhyUs></WhyUs>
         </div>
-
+<div>
+    <HowItWorks></HowItWorks>
+</div>
         <div className="flex justify-center items-center mx-auto m-25">
           <span className="loading loading-bars loading-xl"></span>
         </div>
