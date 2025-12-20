@@ -1,9 +1,19 @@
 import React from 'react';
+import AdminHome from './AdminHome';
+import useRole from '../../../hooks/useRole'
+import LibrarianHome from './LibrarianHome';
 
 const DashboardHome = () => {
+    const {role} = useRole()
     return (
         <div>
-            this is dashboard home
+
+{
+    role==="admin"&& <AdminHome></AdminHome>
+}
+       {
+        role=="librarian"&&<LibrarianHome></LibrarianHome>
+       }
         </div>
     );
 };
