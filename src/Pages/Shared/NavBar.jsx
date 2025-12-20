@@ -1,11 +1,12 @@
 import React from 'react';
 import logo from "../../assets/Capwswsture-Photoroom.png"
-import { Link, NavLink } from 'react-router';
+import { Link, NavLink, useNavigate } from 'react-router';
 import { IoMdPersonAdd } from 'react-icons/io';
 import { MdOutlineLogin, MdOutlineLogout } from 'react-icons/md';
 import useAuth from '../../hooks/useAuth';
+import Swal from 'sweetalert2';
 const NavBar = () => {
-
+const navigate = useNavigate()
 const { user, logout } = useAuth();
 
 const links = <>
@@ -21,15 +22,26 @@ const links = <>
 </>
 
 // handle logout function
-const handleLogout =()=>{
-    logout()
-      .then(() => {
-        console.log("Logged out successfully");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-}
+const handleLogout = () => {
+  Swal.fire({
+          title: "Do you want to Logout?",
+          showDenyButton: true,
+           customClass: {
+      confirmButton: 'my-confirm-btn',
+      denyButton: 'my-deny-btn'
+    },
+          confirmButtonText: "Yes",
+    
+        }).then((result) => {
+   
+          if (result.isConfirmed) {
+            Swal.fire("Logged Out Successfully");
+             logout();
+             navigate('/')
+          } 
+        });
+};
+
     return (
       <div className="navbar bg-base-100 shadow-sm rounded-xl my-4">
         <div className="navbar-start">
@@ -69,10 +81,10 @@ const handleLogout =()=>{
         </div>
         <div className="navbar-end">
           {user && (
-            <Link to="/profile">
+            <Link to="/dashboard/profile">
               <div className="avatar relative group m-4">
                 <div className="w-7 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 cursor-pointer">
-                  <img src={ user.photoURL} alt="User profile avatar" />
+                  <img src={user.photoURL} alt="User profile avatar" />
                   <div className="absolute left-1/2 -translate-x-1/2 bottom-[-2.5rem] bg-gray-800 text-white text-sm px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     {user.displayName || "No Name"}
                   </div>

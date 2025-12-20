@@ -10,19 +10,22 @@ import {
 import { useForm } from "react-hook-form";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { IoIosInformationCircle } from "react-icons/io";
 import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import { AiOutlineHeart } from "react-icons/ai";
 
 const BookDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const modalRef = useRef(null);
-
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const deliveryCharge = 85; // Fixed delivery charge
+const [isWishlisted, setIsWishlisted] = useState(false);
 
   const {
     register,
@@ -30,8 +33,8 @@ const BookDetails = () => {
     formState: { errors },
     reset,
   } = useForm();
-const {user} = useAuth()
-  const { data: book = [] } = useQuery({
+  const { user } = useAuth();
+  const { data: book = [], refetch } = useQuery({
     queryKey: ["book"],
     queryFn: async () => {
       const res = await axiosSecure.get(`/book/details/${id}`);
@@ -43,26 +46,71 @@ const {user} = useAuth()
   useEffect(() => {
     if (book.price) {
       setTotal(book.price * quantity + deliveryCharge);
-      
     }
   }, [quantity, book.price]);
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    data.bookName = book.title
-    data.author = book.author
-    data.cost = total
-    data.bookId = book._id
-    data.status = "pending"
-    data.paymentStatus = "unpaid"
-    data.image = book.image
-    data.librarianEmail = book.librarianEmail
-    axiosSecure.post('/order', data).then(res=>{
-        console.log(res.data)
-    })
-    modalRef.current.close();
-    reset();
+useEffect(() => {
+  if (book?._id && user?.email) {
+    axiosSecure
+      .get(`/wishlist/check?bookId=${book._id}&email=${user.email}`)
+      .then((res) => {
+        setIsWishlisted(res.data.exists);
+      });
+  }
+}, [book?._id, user?.email]);
+
+
+  const onSubmit = async (data) => {
+    data.bookName = book.title;
+    data.author = book.author;
+    data.cost = total;
+    data.bookId = book._id;
+    data.status = "pending";
+    data.paymentStatus = "unpaid";
+    data.image = book.image;
+    data.librarianEmail = book.librarianEmail;
+
+    const res = await axiosSecure.post("/order", data);
+    console.log(res.data);
+    if (res.data.orderId) {
+      modalRef.current.close();
+      reset();
+      refetch();
+
+      navigate("/dashboard/orders");
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your Order has been Placed",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
+const handleWishlist = async () => {
+  if (isWishlisted) return;
+
+  const wishInfo = {
+    bookName: book.title,
+    author: book.author,
+    bookId: book._id,
+    image: book.image,
+    price: book.price,
+    userEmail: user.email,
+  };
+
+  const res = await axiosSecure.post("/wishlist/add", wishInfo);
+
+  if (res.data.insertedId) {
+    setIsWishlisted(true);
+    Swal.fire({
+      icon: "success",
+      title: "Added to wishlist ❤️",
+      timer: 1200,
+      showConfirmButton: false,
+    });
+  }
+};
 
   const stockCheck = () => {
     if (book.inStock < 1) {
@@ -87,263 +135,289 @@ const {user} = useAuth()
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
-      <div className="card lg:card-side bg-base-100 shadow-xl max-w-5xl w-full border border-gray-100">
-        <figure className="bg-[#0f1f38] lg:w-1/3 min-h-[300px] flex items-center justify-center">
-          <img
-            src={book.image}
-            alt="Book Cover"
-            className="w-36 rounded shadow-lg hover:scale-105 transition-transform duration-300"
-          />
-        </figure>
+    <div className="my-7">
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
+        <div className="card lg:card-side bg-base-100 shadow-xl max-w-5xl w-full border border-gray-100">
+          <figure className="bg-[#0f1f38] lg:w-1/3 min-h-[300px] flex items-center justify-center">
+            <img
+              src={book.image}
+              alt="Book Cover"
+              className="w-36 rounded shadow-lg hover:scale-105 transition-transform duration-300"
+            />
+          </figure>
 
-        <div className="card-body lg:w-2/3 text-left">
-          <h2 className="card-title text-3xl font-bold">{book.title}</h2>
-          <p className="text-blue-500 font-medium text-lg grow-0">
-            {book.author}
-          </p>
-
-          <div className="flex items-center gap-3 my-2">
-            <div className="badge badge-ghost p-3 font-semibold text-gray-500">
-              Fiction
-            </div>
-            <div className="flex text-yellow-400 gap-1">
-              <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
-              <FaStar className="text-gray-300" />
-            </div>
-            <span className="text-gray-500 text-sm">4.5 (1289 reviews)</span>
-          </div>
-
-          {stockCheck()}
-          <div className="text-3xl font-bold text-blue-500 my-2">
-            ${book.price}
-          </div>
-
-          <dialog ref={modalRef} id="my_modal_4" className="modal">
-            <div className="modal-box w-11/12 max-w-5xl">
-              <h3 className="font-bold text-2xl text-center mb-6">
-                Place Your Order
-              </h3>
-
-              <form
-                id="order-form"
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-4"
+          <div className="card-body lg:w-2/3 text-left">
+            <div className="flex justify-between items-center">
+              <h2 className="card-title text-3xl font-bold">{book.title}</h2>
+              <button
+                disabled={isWishlisted}
+                onClick={handleWishlist}
+                className={`btn btn-sm ${
+                  isWishlisted
+                    ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                    : "bg-primary text-accent"
+                }`}
               >
-                {/* --- Personal Info Section --- */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="form-control w-full">
-                    <label className="label">
-                      <span className="label-text flex items-center gap-2">
-                        <FaUser /> Full Name
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      value={user.displayName}
-                      placeholder="John Doe"
-                      className="input input-bordered w-full"
-                      {...register("fullName", { required: true })}
-                    />
-                    {errors.fullName && (
-                      <span className="text-red-500 text-xs mt-1">
-                        Name is required
-                      </span>
-                    )}
+                <AiOutlineHeart />
+                {isWishlisted ? "Already in Wishlist" : "Add to Wishlist"}
+              </button>
+            </div>
+
+            <p className="text-blue-500 font-medium text-lg grow-0">
+              {book.author}
+            </p>
+
+            <div className="flex items-center gap-3 my-2">
+              <div className="badge badge-ghost p-3 font-semibold text-gray-500">
+                Fiction
+              </div>
+              <div className="flex text-yellow-400 gap-1">
+                <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
+                <FaStar className="text-gray-300" />
+              </div>
+              <span className="text-gray-500 text-sm">4.5 (1289 reviews)</span>
+            </div>
+
+            {stockCheck()}
+            <div className="text-3xl font-bold text-blue-500 my-2">
+              ${book.price}
+            </div>
+
+            <dialog ref={modalRef} id="my_modal_4" className="modal">
+              <div className="modal-box w-11/12 max-w-5xl">
+                <h3 className="font-bold text-2xl text-center mb-6">
+                  Place Your Order
+                </h3>
+
+                <form
+                  id="order-form"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="flex flex-col gap-4"
+                >
+                  {/* --- Personal Info Section --- */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text flex items-center gap-2">
+                          <FaUser /> Full Name
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        value={user.displayName}
+                        placeholder="John Doe"
+                        className="input input-bordered w-full"
+                        {...register("fullName", { required: true })}
+                      />
+                      {errors.fullName && (
+                        <span className="text-red-500 text-xs mt-1">
+                          Name is required
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text flex items-center gap-2">
+                          <FaEnvelope /> Email Address
+                        </span>
+                      </label>
+                      <input
+                        value={user.email}
+                        type="email"
+                        placeholder="john@example.com"
+                        className="input input-bordered w-full"
+                        {...register("email", { required: true })}
+                      />
+                      {errors.email && (
+                        <span className="text-red-500 text-xs mt-1">
+                          Email is required
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div className="form-control w-full">
                     <label className="label">
                       <span className="label-text flex items-center gap-2">
-                        <FaEnvelope /> Email Address
+                        <FaPhone /> Phone Number
                       </span>
                     </label>
                     <input
-                      value={user.email}
-                      type="email"
-                      placeholder="john@example.com"
+                      type="tel"
+                      placeholder="+880 1711..."
                       className="input input-bordered w-full"
-                      {...register("email", { required: true })}
+                      {...register("phone", { required: true })}
                     />
-                    {errors.email && (
+                    {errors.phone && (
                       <span className="text-red-500 text-xs mt-1">
-                        Email is required
+                        Phone is required
                       </span>
                     )}
                   </div>
-                </div>
 
-                <div className="form-control w-full">
-                  <label className="label">
-                    <span className="label-text flex items-center gap-2">
-                      <FaPhone /> Phone Number
-                    </span>
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="+880 1711..."
-                    className="input input-bordered w-full"
-                    {...register("phone", { required: true })}
-                  />
-                  {errors.phone && (
-                    <span className="text-red-500 text-xs mt-1">
-                      Phone is required
-                    </span>
-                  )}
-                </div>
-
-                {/* Quantity Field */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text flex items-center gap-2">
-                      Quantity
-                    </span>
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="1"
-                    value={quantity}
-                    min="1"
-                    className="input input-bordered w-full"
-                    {...register("quantity", {
-                      required: true,
-                      min: 1,
-                      valueAsNumber: true,
-                      onChange: (e) => setQuantity(Number(e.target.value)),
-                    })}
-                  />
-                  {errors.quantity && (
+                  {/* Quantity Field */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text flex items-center gap-2">
+                        Quantity
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max={book.inStock}
+                      value={quantity}
+                      className="input input-bordered w-full"
+                      {...register("quantity", {
+                        required: true,
+                        min: 1,
+                        max: book.inStock,
+                        valueAsNumber: true,
+                        onChange: (e) => setQuantity(Number(e.target.value)),
+                      })}
+                    />
+                    {errors.quantity && (
+                      <span className="text-red-500 text-xs">
+                        Quantity must be between 1 and {book.inStock}
+                      </span>
+                    )}
+                    {/* {errors.quantity && (
                     <span className="text-red-500 text-xs mt-1">
                       Quantity must be at least 1
                     </span>
-                  )}
+                  )} */}
 
-                  {/* Live Total */}
-                  {quantity > 0 && (
-                    <div>
-                      <p className="font-semibold mt-2">
-                        Total Payable Amount (With $85 Delivery Charge) :{" "}
-                        <span className="text-blue-500">${total}</span>
-                      </p>
+                    {/* Live Total */}
+                    {quantity > 0 && (
+                      <div>
+                        <p className="font-semibold mt-2">
+                          Total Payable Amount (With $85 Delivery Charge) :{" "}
+                          <span className="text-blue-500">${total}</span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* --- Detailed Address Section --- */}
+                  <div className="divider text-primary">
+                    <FaMapMarkerAlt /> Shipping Address
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text">Division</span>
+                      </label>
+                      <select
+                        className="select select-bordered w-full"
+                        defaultValue=""
+                        {...register("division", { required: true })}
+                      >
+                        <option disabled value="">
+                          Select Division
+                        </option>
+                        <option value="Dhaka">Dhaka</option>
+                        <option value="Chittagong">Chittagong</option>
+                        <option value="Rajshahi">Rajshahi</option>
+                        <option value="Khulna">Khulna</option>
+                        <option value="Barisal">Barisal</option>
+                        <option value="Sylhet">Sylhet</option>
+                        <option value="Rangpur">Rangpur</option>
+                        <option value="Mymensingh">Mymensingh</option>
+                      </select>
                     </div>
-                  )}
-                </div>
 
-                {/* --- Detailed Address Section --- */}
-                <div className="divider text-primary">
-                  <FaMapMarkerAlt /> Shipping Address
-                </div>
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text">Zilla (District)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Gazipur"
+                        className="input input-bordered w-full"
+                        {...register("district", { required: true })}
+                      />
+                    </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="form-control w-full">
-                    <label className="label">
-                      <span className="label-text">Division</span>
-                    </label>
-                    <select
-                      className="select select-bordered w-full"
-                      defaultValue=""
-                      {...register("division", { required: true })}
-                    >
-                      <option disabled value="">
-                        Select Division
-                      </option>
-                      <option value="Dhaka">Dhaka</option>
-                      <option value="Chittagong">Chittagong</option>
-                      <option value="Rajshahi">Rajshahi</option>
-                      <option value="Khulna">Khulna</option>
-                      <option value="Barisal">Barisal</option>
-                      <option value="Sylhet">Sylhet</option>
-                      <option value="Rangpur">Rangpur</option>
-                      <option value="Mymensingh">Mymensingh</option>
-                    </select>
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text">Upazila</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Kapasia"
+                        className="input input-bordered w-full"
+                        {...register("upazila", { required: true })}
+                      />
+                    </div>
                   </div>
 
-                  <div className="form-control w-full">
-                    <label className="label">
-                      <span className="label-text">Zilla (District)</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Gazipur"
-                      className="input input-bordered w-full"
-                      {...register("district", { required: true })}
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text">Union / Ward No.</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Ward 04"
+                        className="input input-bordered w-full"
+                        {...register("ward")}
+                      />
+                    </div>
 
-                  <div className="form-control w-full">
-                    <label className="label">
-                      <span className="label-text">Upazila</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Kapasia"
-                      className="input input-bordered w-full"
-                      {...register("upazila", { required: true })}
-                    />
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text">
+                          Village / Street / House
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="House 12, Road 5..."
+                        className="input input-bordered w-full"
+                        {...register("street", { required: true })}
+                      />
+                    </div>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="form-control w-full">
-                    <label className="label">
-                      <span className="label-text">Union / Ward No.</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Ward 04"
-                      className="input input-bordered w-full"
-                      {...register("ward")}
-                    />
-                  </div>
-
-                  <div className="form-control w-full">
-                    <label className="label">
-                      <span className="label-text">
-                        Village / Street / House
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="House 12, Road 5..."
-                      className="input input-bordered w-full"
-                      {...register("street", { required: true })}
-                    />
-                  </div>
-                </div>
-              </form>
-
-              <div className="modal-action mt-8">
-                <form method="dialog" className="flex gap-2">
-                  <button className="btn">Cancel</button>
-                  <button
-                    type="submit"
-                    form="order-form"
-                    className="btn btn-primary"
-                  >
-                    Place Order
-                  </button>
                 </form>
+
+                <div className="modal-action mt-8">
+                  <form method="dialog" className="flex gap-2">
+                    <button className="btn">Cancel</button>
+                    <button
+                      type="submit"
+                      form="order-form"
+                      className="btn btn-primary"
+                    >
+                      Place Order
+                    </button>
+                  </form>
+                </div>
               </div>
-            </div>
-          </dialog>
+            </dialog>
 
-          <div className="card-actions">
-            <button
-              onClick={() => modalRef.current.showModal()}
-              className="btn btn-primary w-full text-white bg-blue-500 border-none hover:bg-blue-600"
-            >
-              <span>
+            <div className="card-actions">
+              <button
+                disabled={book.inStock < 1}
+                onClick={() => modalRef.current.showModal()}
+                className={`btn w-full text-white ${
+                  book.inStock < 1
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }`}
+              >
                 <HiOutlineShoppingBag />
-              </span>{" "}
-              Order Now
-            </button>
-          </div>
+                Order Now
+              </button>
+            </div>
 
-          <div className="mt-4">
-            <h3 className="text-lg font-bold text-gray-800">Synopsis</h3>
-            <p className="text-gray-500 mt-2 leading-relaxed text-sm">
-              {book.description}
-            </p>
+            <div className="mt-4">
+              <h3 className="text-lg font-bold text-gray-800">Synopsis</h3>
+              <p className="text-gray-500 mt-2 leading-relaxed text-sm">
+                {book.description}
+              </p>
+            </div>
           </div>
         </div>
       </div>

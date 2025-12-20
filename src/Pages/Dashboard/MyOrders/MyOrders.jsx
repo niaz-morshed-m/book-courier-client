@@ -3,6 +3,8 @@ import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router";
+import Swal from "sweetalert2";
+import { FaCircleInfo } from "react-icons/fa6";
 
 
 const MyOrders = () => {
@@ -18,17 +20,50 @@ const MyOrders = () => {
   });
 console.log(orders)
  const cancelStatus = (id) => {
-   axiosSecure
-     .patch(`/order/${id}`, { status: "cancelled" })
-     .then((res) =>{
-        refetch()
-        console.log(res.data)
-     } )
-     .catch((err) => console.log(err));
- };
 
-  return (
+    Swal.fire({
+      title: "You Want to Cancel the Order?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showDenyButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Cancelled!",
+          text: "Your order has been cancelled.",
+          icon: "success",
+        });
+        axiosSecure
+          .patch(`/order/${id}`, { status: "cancelled" })
+          .then((res) => {
+            refetch();
+            console.log(res.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    });
+
+ };
+if(orders.length === 0){
+   return (
+     <div className="my-2.5">
+       <p className="flex justify-center items-center gap-2 font-bold text-2xl">
+         <span className="">
+           <FaCircleInfo />
+         </span>
+         You haven't placed any order yet
+       </p>
+     </div>
+   );
+}
+else{
+     return (
     <div className="overflow-x-auto">
+        <p className="text-xl font-semibold mt-2">Your Orders</p>
+        <p className="text-secondary mb-2">All the books you ordered</p>
       <table className="table">
         {/* head */}
         <thead>
@@ -92,6 +127,8 @@ console.log(orders)
       </table>
     </div>
   );
+}
+ 
 };
 
 export default MyOrders;

@@ -20,6 +20,10 @@ import AddBooks from "../Pages/AddBooks/AddBooks";
 import MyBooks from "../Pages/Dashboard/MyBooks/MyBooks";
 import MyBookOrders from "../Pages/Dashboard/MyBookOrders/MyBookOrders";
 import MyProfile from "../Pages/Profile/MyProfile";
+import AdminRoute from "./AdminRoute";
+import LibrarianRoute from "./LibrarianRoute";
+import MyWishlist from "../Pages/Dashboard/MyWishlist/MyWishlist";
+import { FaCircleInfo } from "react-icons/fa6";
 
 export const router = createBrowserRouter([
   {
@@ -55,10 +59,7 @@ export const router = createBrowserRouter([
         path: "/login",
         element: <Login></Login>,
       },
-      {
-        path:"/profile",
-        element: <MyProfile></MyProfile>
-      }
+    
     ],
   },
   {
@@ -72,7 +73,11 @@ export const router = createBrowserRouter([
 
       {
         path: "/dashboard/orders",
-        element: <MyOrders></MyOrders>,
+        element: (
+          <PrivateRoute>
+            <MyOrders></MyOrders>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/payment/:id",
@@ -84,32 +89,84 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/payment-cancelled",
-        element: <PaymentFailed></PaymentFailed>
+        element: <PaymentFailed></PaymentFailed>,
       },
       {
         path: "/dashboard/invoices",
-        element: <Invoices></Invoices>
+        element: (
+          <PrivateRoute>
+            <Invoices></Invoices>
+          </PrivateRoute>
+        ),
       },
       {
-        path: '/dashboard/users',
-        element: <Users></Users>
+        path: "/dashboard/users",
+        element: (
+          <AdminRoute>
+            <Users></Users>
+          </AdminRoute>
+        ),
       },
       {
-        path: '/dashboard/manage-books',
-        element: <ManageBooks></ManageBooks>
+        path: "/dashboard/manage-books",
+        element: (
+          <AdminRoute>
+            <ManageBooks></ManageBooks>
+          </AdminRoute>
+        ),
       },
       {
-        path: '/dashboard/add-books',
-        element: <AddBooks></AddBooks>
+        path: "/dashboard/add-books",
+        element: (
+          <LibrarianRoute>
+            <AddBooks></AddBooks>
+          </LibrarianRoute>
+        ),
       },
       {
-        path: '/dashboard/my-books',
-        element: <MyBooks></MyBooks>
+        path: "/dashboard/my-books",
+        element: (
+          <LibrarianRoute>
+            <MyBooks></MyBooks>
+          </LibrarianRoute>
+        ),
       },
       {
-        path: '/dashboard/my-book-orders',
-        element: <MyBookOrders></MyBookOrders>
+        path: "/dashboard/my-book-orders",
+        element: (
+          <LibrarianRoute>
+            <MyBookOrders></MyBookOrders>
+          </LibrarianRoute>
+        ),
+      },
+      {
+        path: "/dashboard/wishlist",
+        element: (
+          <PrivateRoute>
+            <MyWishlist></MyWishlist>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/profile",
+        element: <PrivateRoute>
+            <MyProfile></MyProfile>
+        </PrivateRoute>
       }
     ],
+  },
+  {
+    path: "*",
+    element: (
+      <div className="my-20">
+        <p className="flex justify-center items-center gap-2 font-bold text-2xl">
+          <span className="">
+            <FaCircleInfo />
+          </span>
+          404 Not Found
+        </p>
+        <p className="text-center">The page you are requested is not found</p>
+      </div>
+    ),
   },
 ]);

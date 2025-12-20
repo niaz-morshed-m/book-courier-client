@@ -1,14 +1,24 @@
 import React from 'react';
-import NavBar from '../Pages/Shared/NavBar';
-import logo from '../assets/Capwswsture-Photoroom.png'
 
+ 
+import logo1 from '../assets/logo.png'
+import logotext from '../assets/text.png'
 import { Link, NavLink, Outlet } from 'react-router';
 import { RxDashboard } from 'react-icons/rx';
 import { HiMiniShoppingBag } from 'react-icons/hi2';
 import { FiBookOpen, FiFileText, FiLayers, FiPlusCircle, FiUsers } from 'react-icons/fi';
 import { MdManageAccounts } from 'react-icons/md';
+import useRole from '../hooks/useRole';
+import Loading from '../Components/Loading';
+import { AiOutlineHeart } from 'react-icons/ai';
+import { FaUserCircle } from 'react-icons/fa';
 
 const DashboardLayout = () => {
+    const {role, roleLoading} = useRole()
+console.log(role)
+    if(roleLoading){
+        return <Loading></Loading>
+    }
     return (
       <div className="max-w-11/12 mx-auto">
         <div className="drawer lg:drawer-open">
@@ -37,16 +47,10 @@ const DashboardLayout = () => {
                   <path d="M14 10l2 2l-2 2"></path>
                 </svg>
               </label>
-              <Link to="/">
-                <div className="px-4">
-                  {" "}
-                  <img
-                    className="btn btn-ghost lg:ml-0 md:ml-0 ml-[-15px] md:[h-40px] lg:h-[40px] h-[30px]"
-                    src={logo}
-                    alt=""
-                  />
-                </div>
-              </Link>
+
+              <div className="px-4">
+                <p className="font-medium text-xl">BookCourier Dashboard</p>
+              </div>
             </nav>
             {/* Page content here */}
             <div className="p-4">
@@ -64,91 +68,140 @@ const DashboardLayout = () => {
               {/* Sidebar content here */}
               <ul className="menu w-full grow">
                 {/* List item */}
-
-                {/* List item */}
                 <li>
-                  <button
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                    data-tip="Dashboard"
-                  >
-                    {/* Settings icon */}
-                    <RxDashboard />
-                    <span className="is-drawer-close:hidden">Dashboard</span>
-                  </button>
+                  <Link to="/">
+                    <button
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex"
+                      data-tip="Homepage"
+                    >
+                      {/* Home icon */}
+                      <img className="w-12" src={logo1} alt="" />
+                      <img
+                        src={logotext}
+                        className="is-drawer-close:hidden w-30"
+                        alt=""
+                      />
+                    </button>
+                  </Link>
                 </li>
+                {/* List item */}
+
                 <li>
-                  <NavLink to="/dashboard/orders">
+                  {role === "user" && (
+                    <NavLink to="/dashboard/orders">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="My Order"
+                      >
+                        {/* Settings icon */}
+                        <HiMiniShoppingBag />
+                        <span className="is-drawer-close:hidden">
+                          My Orders
+                        </span>
+                      </button>
+                    </NavLink>
+                  )}
+                  {role === "user" && (
+                    <NavLink to="/dashboard/wishlist">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="My Wishlist"
+                      >
+                        {/* Settings icon */}
+                        <AiOutlineHeart />
+                        <span className="is-drawer-close:hidden">
+                          My Wishlist
+                        </span>
+                      </button>
+                    </NavLink>
+                  )}
+                  {role === "user" && (
+                    <NavLink to="/dashboard/invoices">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="Invoices"
+                      >
+                        {/* Settings icon */}
+                        <FiFileText />
+                        <span className="is-drawer-close:hidden">Invoices</span>
+                      </button>
+                    </NavLink>
+                  )}
+                  {role === "admin" && (
+                    <NavLink to="/dashboard/users">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="Users"
+                      >
+                        {/* Settings icon */}
+                        <FiUsers />
+                        <span className="is-drawer-close:hidden">Users</span>
+                      </button>
+                    </NavLink>
+                  )}
+                  {role === "admin" && (
+                    <NavLink to="/dashboard/manage-books">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="Manage Books"
+                      >
+                        {/* Settings icon */}
+                        <MdManageAccounts />
+                        <span className="is-drawer-close:hidden">
+                          Manage Books
+                        </span>
+                      </button>
+                    </NavLink>
+                  )}
+                  {role === "librarian" && (
+                    <NavLink to="/dashboard/add-books">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="Add Books"
+                      >
+                        {/* Settings icon */}
+                        <FiPlusCircle />
+                        <span className="is-drawer-close:hidden">
+                          Add Books
+                        </span>
+                      </button>
+                    </NavLink>
+                  )}
+                  {role === "librarian" && (
+                    <NavLink to="/dashboard/my-books">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="My Books"
+                      >
+                        {/* Settings icon */}
+                        <FiBookOpen />
+                        <span className="is-drawer-close:hidden">My Books</span>
+                      </button>
+                    </NavLink>
+                  )}
+                  {role === "librarian" && (
+                    <NavLink to="/dashboard/my-book-orders">
+                      <button
+                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
+                        data-tip="Orders of My Books"
+                      >
+                        {/* Settings icon */}
+                        <FiLayers />
+                        <span className="is-drawer-close:hidden">
+                          Orders of My Books
+                        </span>
+                      </button>
+                    </NavLink>
+                  )}
+
+                  <NavLink to="/dashboard/profile">
                     <button
                       className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
-                      data-tip="My Order"
+                      data-tip="My Profile"
                     >
                       {/* Settings icon */}
-                      <HiMiniShoppingBag />
-                      <span className="is-drawer-close:hidden">My Orders</span>
-                    </button>
-                  </NavLink>
-                  <NavLink to="/dashboard/invoices">
-                    <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
-                      data-tip="My Order"
-                    >
-                      {/* Settings icon */}
-                      <FiFileText />
-                      <span className="is-drawer-close:hidden">Invoices</span>
-                    </button>
-                  </NavLink>
-                  <NavLink to="/dashboard/users">
-                    <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
-                      data-tip="My Order"
-                    >
-                      {/* Settings icon */}
-                      <FiUsers />
-                      <span className="is-drawer-close:hidden">Users</span>
-                    </button>
-                  </NavLink>
-                  <NavLink to="/dashboard/manage-books">
-                    <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
-                      data-tip="My Order"
-                    >
-                      {/* Settings icon */}
-                      <MdManageAccounts />
-                      <span className="is-drawer-close:hidden">
-                        Manage Books
-                      </span>
-                    </button>
-                  </NavLink>
-                  <NavLink to="/dashboard/add-books">
-                    <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
-                      data-tip="My Order"
-                    >
-                      {/* Settings icon */}
-                      <FiPlusCircle />
-                      <span className="is-drawer-close:hidden">Add Books</span>
-                    </button>
-                  </NavLink>
-                  <NavLink to="/dashboard/my-books">
-                    <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
-                      data-tip="My Order"
-                    >
-                      {/* Settings icon */}
-                      <FiBookOpen />
-                      <span className="is-drawer-close:hidden">My Books</span>
-                    </button>
-                  </NavLink>
-                  <NavLink to="/dashboard/my-book-orders">
-                    <button
-                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center justify-start gap-1"
-                      data-tip="My Order"
-                    >
-                      {/* Settings icon */}
-                      <FiLayers />
-                      <span className="is-drawer-close:hidden">
-                        Orders of My Books
-                      </span>
+                      <FaUserCircle />
+                      <span className="is-drawer-close:hidden">My Profile</span>
                     </button>
                   </NavLink>
                 </li>

@@ -11,9 +11,11 @@ import {
 } from "react-icons/fa";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const AddBooks = () => {
-
+const navigate = useNavigate()
 const {user} = useAuth()
 const axiosSecure = useAxiosSecure()
 
@@ -33,7 +35,18 @@ data.price = parseInt(data.price)
 data.inStock = parseInt(data.inStock)
 data.addedAt = new Date()
   
-  axiosSecure.post('/book/add', data).then(res=> console.log(res))
+  axiosSecure.post('/book/add', data).then(res=>{
+    if (res.data.insertedId) {
+      navigate("/dashboard/my-books");
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your book has been added",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  })
   };
 
   return (
@@ -169,8 +182,8 @@ data.addedAt = new Date()
                     defaultValue="Published"
                     {...register("status")}
                   >
-                    <option value="Published">Published</option>
-                    <option value="Draft">Unpublished</option>
+                    <option value="published">Published</option>
+                    <option value="unpublished">Unpublished</option>
                   </select>
                 </div>
               </div>

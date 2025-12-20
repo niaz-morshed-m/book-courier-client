@@ -2,6 +2,7 @@ import React from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { MdAdminPanelSettings } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const Users = () => {
   const axiosSecure = useAxiosSecure();
@@ -12,40 +13,56 @@ const Users = () => {
       return res.data;
     },
   });
+  
 
-//   const updateAdmin = (user)=>{
-//     const updatedRole = {
-//         role: "admin"
-//     }
-// axiosSecure
-//   .patch(`/user/${user._id}`, updatedRole)
-//   .then((res) => {
-//   if (res.data.modifiedCount) {
-//       console.log(res.data);
-//       refetch();
-//   }
-//   })
-//   .catch((err) => console.log(err));
+  //   const updateAdmin = (user)=>{
+  //     const updatedRole = {
+  //         role: "admin"
+  //     }
+  // axiosSecure
+  //   .patch(`/user/${user._id}`, updatedRole)
+  //   .then((res) => {
+  //   if (res.data.modifiedCount) {
+  //       console.log(res.data);
+  //       refetch();
+  //   }
+  //   })
+  //   .catch((err) => console.log(err));
 
-
-//   }
-  const handleAction = (user, role)=>{
+  //   }
+  const handleAction = (user, role) => {
     const updatedRole = {
-        role: role
-    }
-axiosSecure.patch(`/user/${user._id}`, updatedRole).then(res=> {
-    
-    console.log(res.data)
-     if (res.data.modifiedCount) {
-       refetch();
-     }
-});
+      role: role,
+    };
 
-
-  }
+    Swal.fire({
+      title: "Are you Sure?",
+      text: `You want to update this user role to ${role}?`,
+      icon: "warning",
+      showDenyButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Updated!",
+          text: `User Role Updated to ${role}`,
+          icon: "success",
+        });
+        axiosSecure.patch(`/user/role/${user._id}`, updatedRole).then((res) => {
+          console.log(res.data);
+          if (res.data.modifiedCount) {
+            refetch();
+          }
+        });
+      }
+    });
+  };
   return (
     <div>
-      <p>Users</p>
+      <p className="text-xl font-semibold mt-2">Users</p>
+      <p className="text-secondary mb-2">All registered Users</p>
       <div className="overflow-x-auto">
         <table className="table">
           {/* head */}
@@ -106,7 +123,10 @@ axiosSecure.patch(`/user/${user._id}`, updatedRole).then(res=> {
                 <td>
                   {" "}
                   {user.role === "librarian" ? (
-                    <button onClick={()=> handleAction(user, "user")} className="btn btn-xs bg-primary text-accent">
+                    <button
+                      onClick={() => handleAction(user, "user")}
+                      className="btn btn-xs bg-primary text-accent"
+                    >
                       {" "}
                       <span>
                         <MdAdminPanelSettings />
@@ -114,7 +134,10 @@ axiosSecure.patch(`/user/${user._id}`, updatedRole).then(res=> {
                       Remove Librarian
                     </button>
                   ) : (
-                    <button onClick={()=> handleAction(user, "librarian")} className="btn btn-xs bg-primary text-accent">
+                    <button
+                      onClick={() => handleAction(user, "librarian")}
+                      className="btn btn-xs bg-primary text-accent"
+                    >
                       {" "}
                       <span>
                         <MdAdminPanelSettings />

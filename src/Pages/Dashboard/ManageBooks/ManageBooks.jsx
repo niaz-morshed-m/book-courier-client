@@ -1,6 +1,8 @@
 import React from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
+import { FaCircleInfo } from 'react-icons/fa6';
 
 const ManageBooks = () => {
     const axiosSecure = useAxiosSecure()
@@ -17,25 +19,78 @@ const ManageBooks = () => {
     const updatedStatus = {
       status: status,
     };
-    axiosSecure.patch(`/book/status/${book._id}`, updatedStatus).then((res) => {
-      console.log(res.data);
+    Swal.fire({
+      title: "Are you Sure?",
+      text: `Make status of this book to ${status}?`,
+      icon: "warning",
+      showDenyButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Updated!",
+          text: `The status of this book has been updated to ${status}`,
+          icon: "success",
+        });
+       axiosSecure.patch(`/book/status/${book._id}`, updatedStatus).then((res) => {
+   
       if (res.data.modifiedCount) {
         refetch();
       }
     });
-  };
-  const handleDelete = (id) => {
-    axiosSecure.delete(`/book/${id}`).then((res) => {
-      console.log(res.data);
-      if (res.data.deletedCount) {
-        refetch();
       }
     });
+    
+  };
+  const handleDelete = (id) => {
+
+Swal.fire({
+  title: "Are you Sure?",
+  text: `Delete this book?`,
+  icon: "warning",
+  showDenyButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes",
+}).then((result) => {
+  if (result.isConfirmed) {
+    Swal.fire({
+      title: "Deleted!",
+      text: `The Book has been deleted`,
+      icon: "success",
+    });
+   axiosSecure.delete(`/book/${id}`).then((res) => {
+     console.log(res.data);
+     if (res.data.bookDeleted) {
+       refetch();
+     }
+   });
+  }
+});
+    
+
+    
   };
 
+if(books.length===0){
+    return(
+        <div>
+              <p className="flex justify-center items-center gap-2 font-bold text-2xl">
+                      <span className="">
+                        <FaCircleInfo />
+                      </span>
+                      No book was added yet
+                    </p>
+        </div>
+    )
+}
+else{
     return (
       <div>
-        <p>Manage Books</p>
+        <p className="text-xl font-semibold mt-2">Manage Books</p>
+        <p className="text-secondary mb-2">All the books librarians added</p>
         <div className="overflow-x-auto">
           <table className="table">
             {/* head */}
@@ -86,7 +141,10 @@ const ManageBooks = () => {
                         Publish
                       </button>
                     )}
-                    <button onClick={()=> handleDelete(book._id)} className="btn btn-xs bg-primary text-accent">
+                    <button
+                      onClick={() => handleDelete(book._id)}
+                      className="btn btn-xs bg-primary text-accent"
+                    >
                       Delete
                     </button>
                   </td>
@@ -97,6 +155,8 @@ const ManageBooks = () => {
         </div>
       </div>
     );
+}
+    
 };
 
 export default ManageBooks;

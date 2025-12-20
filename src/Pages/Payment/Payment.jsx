@@ -34,7 +34,7 @@ const handlePayment =  ()=>{
           Please Pay ${order.cost} for{" "}
           <span className="text-primary">{order.bookName}</span>
         </span> <br></br>
-        <button onClick={handlePayment} className='btn bg-primary my-3'>Proceed to Pay</button>
+        <button onClick={handlePayment} className='btn bg-primary my-3 text-accent'>Proceed to Pay</button>
       </div>
     );
 };
