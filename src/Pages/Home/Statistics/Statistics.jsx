@@ -20,7 +20,7 @@ const Statistics = () => {
           </div>
           <div>
             <p className="text-primary text-4xl font-bold">50K+</p>
-            <p>Books Sold</p>
+            <p className='ml-[-10px]'>Books Sold</p>
           </div>
           <div>
             <p className="text-primary text-4xl font-bold">1K+</p>

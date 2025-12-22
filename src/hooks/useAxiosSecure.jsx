@@ -6,13 +6,13 @@ import { useNavigate } from "react-router";
 
 // ✅ create instance OUTSIDE hook
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://book-courier-server-rho.vercel.app",
 });
 
 const useAxiosSecure = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-console.log("Access token:", user?.accessToken);
+
   useEffect(() => {
     // intercept request
 
@@ -28,11 +28,9 @@ console.log("Access token:", user?.accessToken);
         return response;
       },
       (error) => {
-        console.log(error);
-
         const statusCode = error.response?.status;
 
-        if (statusCode === 401 || statusCode === 403 && !user?.accessToken) {
+        if (statusCode === 401 || (statusCode === 403 && !user?.accessToken)) {
           logout().then(() => {
             navigate("/login");
           });
@@ -49,7 +47,6 @@ console.log("Access token:", user?.accessToken);
   }, [user, logout, navigate]);
 
   return axiosSecure;
-  
 };
 
 export default useAxiosSecure;

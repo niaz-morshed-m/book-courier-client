@@ -32,7 +32,7 @@ const Register = () => {
         }
 
         axiosSecure.post('/user/create', userInfo).then(res=>{
-           console.log(res)
+        
         })
 
 profileUpdate({
@@ -58,7 +58,7 @@ profileUpdate({
       })
       .catch((error) => {
         const errorMessage = error.message;
-        console.log(errorMessage);
+ 
       });
   };
 
@@ -75,10 +75,10 @@ profileUpdate({
 
 
 axiosSecure.post('/user/create', userInfo).then(res=>{
-    console.log(res)
+  
 })
 
-console.log(user)
+ 
         if (location.state) {
           navigate(location.state);
         } else {
