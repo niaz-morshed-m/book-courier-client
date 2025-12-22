@@ -4,13 +4,14 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import { FaCircleInfo } from 'react-icons/fa6';
+import Loading from '../../../Components/Loading';
 
 const MyWishlist = () => {
 const {user} = useAuth()
 const axiosSecure = useAxiosSecure()
 
 
-  const {data: wishList = []} = useQuery({
+  const {data: wishList = [], isLoading} = useQuery({
     queryKey: ["myWishlist", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/wishlist/${user?.email}`);
@@ -18,7 +19,9 @@ const axiosSecure = useAxiosSecure()
     },
   });
  
-
+if (isLoading) {
+  return <Loading></Loading>
+}
 if(wishList.length===0){
     return (
       <div className="my-2.5">

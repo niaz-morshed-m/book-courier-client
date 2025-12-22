@@ -30,7 +30,7 @@ const {user} =useAuth()
          { status: "cancelled", count: counts.cancelled || 0 },
        ]
      : [];
-  
+  console.log(counts)
     return (
       <div>
         <div>

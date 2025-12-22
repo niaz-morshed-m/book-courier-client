@@ -18,13 +18,16 @@ import Swal from "sweetalert2";
 import { AiOutlineHeart } from "react-icons/ai";
 
 const BookDetails = () => {
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const modalRef = useRef(null);
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
-  const deliveryCharge = 85; // Fixed delivery charge
+  const deliveryCharge = 85; 
 const [isWishlisted, setIsWishlisted] = useState(false);
 
   const {
@@ -34,7 +37,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
     reset,
   } = useForm();
   const { user } = useAuth();
-  const { data: book = [], refetch } = useQuery({
+  const { data: book = [], refetch, isLoading } = useQuery({
     queryKey: ["book"],
     queryFn: async () => {
       const res = await axiosSecure.get(`/book/details/${id}`);
@@ -42,7 +45,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
     },
   });
 
-  // Update total whenever quantity or book price changes
+
   useEffect(() => {
     if (book.price) {
       setTotal(book.price * quantity + deliveryCharge);
@@ -58,6 +61,15 @@ useEffect(() => {
       });
   }
 }, [book?._id, user?.email]);
+
+const { data: reviews = [], refetch: refetchReviews } = useQuery({
+  queryKey: ["reviews", book?._id],
+  enabled: !!book?._id,
+  queryFn: async () => {
+    const res = await axiosSecure.get(`/reviews/${book._id}`);
+    return res.data;
+  },
+});
 
 
   const onSubmit = async (data) => {
@@ -133,6 +145,48 @@ const handleWishlist = async () => {
       );
     }
   };
+const handleReviewSubmit = async (e) => {
+  e.preventDefault();
+
+  const reviewData = {
+    bookId: book._id,
+    bookTitle: book.title,
+    rating,
+    comment,
+    userName: user.displayName,
+    userEmail: user.email,
+    userPhoto: user.photoURL,
+  };
+
+  try {
+    const res = await axiosSecure.post("/reviews", reviewData);
+
+    if (res.data.insertedId) {
+      Swal.fire({
+        icon: "success",
+        title: "Review added",
+        timer: 1200,
+        showConfirmButton: false,
+      });
+      setComment("");
+      setRating(5);
+      refetchReviews();
+    }
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: err.response?.data?.message || "Failed to add review",
+    });
+  }
+};
+
+if(isLoading){
+  return (
+    <div className="flex justify-center items-center mx-auto m-25">
+      <span className="loading loading-bars loading-xl"></span>
+    </div>
+  );
+}
 
   return (
     <div className="my-7">
@@ -171,11 +225,6 @@ const handleWishlist = async () => {
               <div className="badge badge-ghost p-3 font-semibold text-gray-500">
                 Fiction
               </div>
-              <div className="flex text-yellow-400 gap-1">
-                <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
-                <FaStar className="text-gray-300" />
-              </div>
-              <span className="text-gray-500 text-sm">4.5 (1289 reviews)</span>
             </div>
 
             {stockCheck()}
@@ -419,6 +468,72 @@ const handleWishlist = async () => {
               </p>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="mt-10 border-t pt-6">
+        <h3 className="text-xl font-bold mb-4">Write a Review</h3>
+
+        <form onSubmit={handleReviewSubmit} className="space-y-3">
+          {/* Rating */}
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <FaStar
+                key={star}
+                onClick={() => setRating(star)}
+                className={`cursor-pointer ${
+                  star <= rating ? "text-yellow-400" : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Comment */}
+          <textarea
+            required
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Write your review..."
+            className="textarea textarea-bordered w-full"
+          />
+
+          <button className="btn btn-primary btn-sm">Submit Review</button>
+        </form>
+      </div>
+      <div className="mt-10">
+        <h3 className="text-xl font-bold mb-4">Reviews ({reviews.length})</h3>
+
+        {reviews.length === 0 && (
+          <p className="text-gray-500">No reviews yet.</p>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {reviews.map((review) => (
+            <div key={review._id} className="card bg-base-100 shadow">
+              <div className="card-body">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={review.userPhoto}
+                    className="w-10 h-10 rounded-full"
+                    alt=""
+                  />
+                  <div>
+                    <h4 className="font-semibold">{review.userName}</h4>
+                    <div className="flex">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <FaStar key={i} className="text-yellow-400 text-sm" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 text-sm mt-3">{review.comment}</p>
+
+                <p className="text-xs text-gray-400 mt-2">
+                  {new Date(review.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

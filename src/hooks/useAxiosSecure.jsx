@@ -3,7 +3,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import useAuth from "./useAuth";
 import { useNavigate } from "react-router";
-import Forbidden from "../Components/Forbidden";
 
 // ✅ create instance OUTSIDE hook
 const axiosSecure = axios.create({
@@ -13,14 +12,16 @@ const axiosSecure = axios.create({
 const useAxiosSecure = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
+console.log("Access token:", user?.accessToken);
   useEffect(() => {
     // intercept request
+
     const reqInterceptor = axiosSecure.interceptors.request.use((config) => {
-      config.headers.Authorization = `Bearer ${user?.accessToken}`;
+      if (user?.accessToken) {
+        config.headers.Authorization = `Bearer ${user.accessToken}`;
+      }
       return config;
     });
-
     // interceptor response
     const resInterceptor = axiosSecure.interceptors.response.use(
       (response) => {
@@ -29,10 +30,9 @@ const useAxiosSecure = () => {
       (error) => {
         console.log(error);
 
-        const statusCode = error.status;
+        const statusCode = error.response?.status;
 
-
-        if (statusCode === 401 || statusCode === 403) {
+        if (statusCode === 401 || statusCode === 403 && !user?.accessToken) {
           logout().then(() => {
             navigate("/login");
           });
@@ -41,7 +41,7 @@ const useAxiosSecure = () => {
         return Promise.reject(error);
       }
     );
- 
+
     return () => {
       axiosSecure.interceptors.request.eject(reqInterceptor);
       axiosSecure.interceptors.response.eject(resInterceptor);
@@ -49,6 +49,7 @@ const useAxiosSecure = () => {
   }, [user, logout, navigate]);
 
   return axiosSecure;
+  
 };
 
 export default useAxiosSecure;

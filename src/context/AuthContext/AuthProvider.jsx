@@ -38,6 +38,7 @@ const AuthProvider = ({ children }) => {
 
   // logout
   const logout = () => {
+    setLoading(true);
     signOut(auth);
   };
 
@@ -50,10 +51,16 @@ const profileUpdate = (obj)=>{
 
   // observer
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unSubscribe = onAuthStateChanged(auth, async(currentUser) => {
+        if (currentUser) {
+        const token = await currentUser.getIdToken(); // ✅ get Firebase ID token
+        setUser({ ...currentUser, accessToken: token });
+      } else {
+        setUser(null);
+      }
       setLoading(false);
-      setUser(currentUser);
     });
+    
 
     return () => {
       unSubscribe();

@@ -59,12 +59,15 @@ export const router = createBrowserRouter([
         path: "/login",
         element: <Login></Login>,
       },
-    
     ],
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout></DashboardLayout>,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
@@ -149,10 +152,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/profile",
-        element: <PrivateRoute>
+        element: (
+          <PrivateRoute>
             <MyProfile></MyProfile>
-        </PrivateRoute>
-      }
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {

@@ -3,18 +3,24 @@ import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { FaCircleInfo } from "react-icons/fa6";
+import Loading from "../../Components/Loading";
 
 const Invoices = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const {data: payments = []} = useQuery({
+  const {data: payments = [], isLoading} = useQuery({
     queryKey: ["myPayments", user?.email],
     queryFn: async () => {
         const res = await axiosSecure.get(`/payment/${user?.email}`);
         return res.data
     },
   });
+
+if (isLoading) {
+  return <Loading></Loading>;
+}
+
 if(payments.length===0){
     return (
       <div className="my-2.5">

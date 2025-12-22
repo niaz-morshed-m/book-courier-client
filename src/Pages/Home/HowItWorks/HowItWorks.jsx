@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
-import { FaRegLightbulb } from "react-icons/fa";
-import { FaArrowTrendUp, FaTruck } from "react-icons/fa6";
-import { IoBookOutline, IoPersonAddOutline } from "react-icons/io5";
-import { MdOutlinePeopleAlt } from "react-icons/md";
+import {  FaTruck } from "react-icons/fa6";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { LuHandshake, LuLeafyGreen } from "react-icons/lu";
 import { FiSearch, FiShoppingCart } from "react-icons/fi";
 
 const HowItWorks = () => {

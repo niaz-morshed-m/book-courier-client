@@ -7,7 +7,7 @@ import { Link, NavLink, Outlet } from 'react-router';
 import { RxDashboard } from 'react-icons/rx';
 import { HiMiniShoppingBag } from 'react-icons/hi2';
 import { FiBookOpen, FiFileText, FiLayers, FiPlusCircle, FiUsers } from 'react-icons/fi';
-import { MdManageAccounts } from 'react-icons/md';
+import {  MdManageAccounts } from 'react-icons/md';
 import useRole from '../hooks/useRole';
 import Loading from '../Components/Loading';
 import { AiOutlineHeart } from 'react-icons/ai';
@@ -48,9 +48,12 @@ console.log(role)
                 </svg>
               </label>
 
-              <div className="px-4">
-                <p className="font-medium text-xl">BookCourier Dashboard</p>
-              </div>
+              <Link to='/dashboard'>
+                {" "}
+                <div className="px-4 btn btn-ghost">
+                  <p className="font-medium text-xl">BookCourier Dashboard</p>
+                </div>
+              </Link>
             </nav>
             {/* Page content here */}
             <div className="p-4">

@@ -1,10 +1,18 @@
-import React from 'react';
+import Aos from 'aos';
+import React, { useEffect } from 'react';
 import { FaMapLocationDot } from 'react-icons/fa6';
 import { Link } from 'react-router';
 
 const CoverageBanner = () => {
+   useEffect(() => {
+     Aos.init();
+   }, []);
     return (
-      <div className="w-full flex flex-col md:flex-row items-center gap-12 p-8">
+      <div
+        data-aos-duration="5000"
+        data-aos="fade-up"
+        className="w-full flex flex-col md:flex-row items-center gap-12 p-8"
+      >
         {/* Left Image */}
         <div className="w-full md:w-1/2">
           <img

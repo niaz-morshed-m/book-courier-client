@@ -5,13 +5,14 @@ import CoverageBanner from './Coverage/CoverageBanner';
 import LatestBooks from './LatestBooks/LatestBooks';
 import WhyUs from './WhyUs/WhyUs';
 import HowItWorks from './HowItWorks/HowItWorks';
+import Statistics from './Statistics/Statistics';
 
 const Home = () => {
     return (
       <div>
         <Banner></Banner>
         <div className="my-14">
-          <p className="text-3xl font-extrabold text-center">Our Coverage</p>
+          <p className="text-4xl font-bold text-center">Our Coverage</p>
           <CoverageBanner></CoverageBanner>
         </div>
 
@@ -24,9 +25,9 @@ const Home = () => {
 <div>
     <HowItWorks></HowItWorks>
 </div>
-        <div className="flex justify-center items-center mx-auto m-25">
-          <span className="loading loading-bars loading-xl"></span>
-        </div>
+       <div>
+        <Statistics></Statistics>
+       </div>
       </div>
     );
 };

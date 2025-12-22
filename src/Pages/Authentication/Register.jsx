@@ -8,7 +8,7 @@ const Register = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure()
-  // hook form related stuffs
+
   const {
     register,
     handleSubmit,
@@ -17,10 +17,10 @@ const Register = () => {
     mode: "onChange", //
   });
 
-  // auth extraction
-  const { registerUser, googleLogin, profileUpdate } = useAuth();
 
-  // register handle function
+  const { registerUser, googleLogin, profileUpdate, setUser } = useAuth();
+
+
   const handleRegister = (data) => {
     registerUser(data.email, data.password)
       .then(() => {
@@ -40,20 +40,21 @@ profileUpdate({
   photoURL: data.photo,
 })
   .then(() => {
-    // Profile updated!
-    // ...
+    setUser((prev) => ({
+      ...prev,
+      displayName: data.name,
+      photoURL: data.photo,
+    }));
+
+    if (location.state) {
+      navigate(location.state);
+    } else {
+      navigate("/");
+    }
   })
   .catch(() => {
-    // An error occurred
-    // ...
+   
   });
-
- if (location.state) {
-   navigate(location.state);
- } else {
-   navigate("/");
- }
-
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -61,7 +62,7 @@ profileUpdate({
       });
   };
 
-  //   handle google signin function
+
   const handleGoogleLogin = () => {
     googleLogin()
       .then((result) => {

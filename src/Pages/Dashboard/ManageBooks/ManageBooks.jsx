@@ -3,10 +3,11 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { FaCircleInfo } from 'react-icons/fa6';
+import Loading from '../../../Components/Loading';
 
 const ManageBooks = () => {
     const axiosSecure = useAxiosSecure()
-    const { data: books = [], refetch } = useQuery({
+    const { data: books = [], refetch, isLoading } = useQuery({
       queryKey: ["books"],
       queryFn: async () => {
         const res = await axiosSecure.get("/book/all");
@@ -73,6 +74,12 @@ Swal.fire({
 
     
   };
+
+
+if (isLoading) {
+  return <Loading></Loading>;
+}
+
 
 if(books.length===0){
     return(

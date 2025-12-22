@@ -3,6 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router";
 
 const BookCard = ({ book }) => {
+  
   return (
     <div className="card bg-base-100 shadow-md">
       <figure className="h-40 w-full bg-black relative py-2.5">

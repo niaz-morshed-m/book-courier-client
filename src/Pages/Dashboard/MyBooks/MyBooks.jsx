@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { FaCircleInfo } from "react-icons/fa6";
+import Loading from "../../../Components/Loading";
 
 const MyBooks = () => {
   const axiosSecure = useAxiosSecure();
@@ -12,7 +13,7 @@ const MyBooks = () => {
   const modalRef = useRef(null);
   const [selectedBook, setSelectedBook] = useState(null);
 
-  const { data: books = [], refetch } = useQuery({
+  const { data: books = [], refetch, isLoading } = useQuery({
     queryKey: ["myBooks", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/books/librarian/${user?.email}`);
@@ -23,7 +24,7 @@ const MyBooks = () => {
   console.log(books);
   const { register, handleSubmit, reset } = useForm();
 
-  // open modal + set default values
+
   const openEditModal = (book) => {
     setSelectedBook(book);
     reset({
@@ -36,7 +37,7 @@ const MyBooks = () => {
     modalRef.current.showModal();
   };
 
-  // submit handler
+
   const onSubmit = (data) => {
   axiosSecure.patch(`/book/${selectedBook._id}`, data).then((res)=>{
 
@@ -58,6 +59,11 @@ Swal.fire({
     
     
   };
+
+if (isLoading) {
+  return <Loading></Loading>;
+}
+
 if(books.length === 0){
     return (
       <div className="my-2.5">
@@ -65,7 +71,7 @@ if(books.length === 0){
           <span className="">
             <FaCircleInfo />
           </span>
-          You haven't placed any order yet
+          You haven't added any book yet
         </p>
       </div>
     );
@@ -119,7 +125,7 @@ else{
          </table>
        </div>
 
-       {/* ================= MODAL ================= */}
+   
        <dialog ref={modalRef} className="modal">
          <div className="modal-box w-11/12 max-w-3xl">
            <h3 className="font-bold text-lg mb-4">Edit Book</h3>
@@ -180,7 +186,7 @@ else{
 
              {/* Actions */}
              <div className="modal-action md:col-span-2">
-               <button type="submit" className="btn btn-success">
+               <button type="submit" className="btn bg-primary text-accent">
                  Update Book
                </button>
                <button

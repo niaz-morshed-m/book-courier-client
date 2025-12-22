@@ -8,7 +8,7 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
 const axiosSecure = useAxiosSecure()
-  // hook form related stuffs
+
   const {
     register,
     handleSubmit,
@@ -17,10 +17,10 @@ const axiosSecure = useAxiosSecure()
     mode: "onChange",
   });
 
-  // auth extraction
+
   const { signinUser, googleLogin } = useAuth();
 
-  // login handle function
+
   const handleLogin = (data) => {
     signinUser(data.email, data.password)
       .then(() => {
@@ -37,7 +37,7 @@ const axiosSecure = useAxiosSecure()
       });
   };
 
-  //   handle google signin function
+
   const handleGoogleLogin = () => {
     googleLogin()
       .then((result) => {
@@ -50,7 +50,7 @@ const axiosSecure = useAxiosSecure()
      };
 
 axiosSecure.post('/user/create', userInfo).then(res=>{
-  console.log(res)
+
 })
 
         if (location.state) {

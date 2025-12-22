@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import BookCard from "../../Components/Cards/BookCard";
+import Aos from "aos";
+import { FaCircleInfo } from "react-icons/fa6";
+import Loading from "../../Components/Loading";
 
 const Books = () => {
   const axiosSecure = useAxiosSecure();
 
-  // 🔍 search state
+
   const [search, setSearch] = useState("");
 
-  // 🔃 sort state
+ 
   const [sortOrder, setSortOrder] = useState("");
 
-  // 📚 fetch books
-  const { data: books = [] } = useQuery({
+
+  const { data: books = [], isLoading } = useQuery({
     queryKey: ["books"],
     queryFn: async () => {
       const res = await axiosSecure.get("/book/published");
@@ -21,26 +24,31 @@ const Books = () => {
     },
   });
 
-  // 🔍 filter + 🔃 sort books
+  
   const filteredAndSortedBooks = books
     .filter((book) => book.title.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       if (sortOrder === "low") {
-        return a.price - b.price; // low → high
+        return a.price - b.price; 
       }
       if (sortOrder === "high") {
-        return b.price - a.price; // high → low
+        return b.price - a.price; 
       }
-      return 0; // no sorting
+      return 0; 
     });
+ useEffect(() => {
+   Aos.init();
+ }, []);
 
+ if (isLoading) {
+   return <Loading></Loading>;
+ }
   return (
     <div>
       <p className="text-3xl font-extrabold text-center my-8">
         Our <span className="text-primary">Books</span> Collections
       </p>
 
-      {/* 🔍 Search & 🔃 Sort */}
       <div className="my-4 flex flex-col md:flex-row justify-center gap-4 px-4">
         {/* Search Input */}
         <label className="input input-bordered flex items-center gap-2 w-full max-w-md">
@@ -49,8 +57,16 @@ const Books = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
           </svg>
 
           <input
@@ -74,11 +90,24 @@ const Books = () => {
         </select>
       </div>
 
-      {/* 📚 Books Grid */}
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5 p-3.5">
-        {filteredAndSortedBooks.map((book) => (
-          <BookCard key={book._id} book={book} />
-        ))}
+      {/*  Books Grid */}
+      <div data-aos="fade-up" data-aos-duration="5000" className="p-3.5">
+        {filteredAndSortedBooks.length === 0 ? (
+           <div className="my-2.5">
+                <p className="flex justify-center items-center gap-2 font-bold text-2xl">
+                  <span className="">
+                    <FaCircleInfo />
+                  </span>
+                  No book found
+                </p>
+              </div>
+        ) : (
+          <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5">
+            {filteredAndSortedBooks.map((book) => (
+              <BookCard key={book._id} book={book} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

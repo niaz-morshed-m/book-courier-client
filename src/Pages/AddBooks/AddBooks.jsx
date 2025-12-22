@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "react-hook-form"; // 1. Import the hook
+import { useForm } from "react-hook-form";
 import {
   FaBook,
   FaUser,
@@ -15,38 +15,35 @@ import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
 const AddBooks = () => {
-const navigate = useNavigate()
-const {user} = useAuth()
-const axiosSecure = useAxiosSecure()
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  // 2. Destructure the functions we need from the hook
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // 3. This function runs ONLY if validation passes
   const onSubmit = (data) => {
-  
-data.librarianEmail = user.email
-data.librarianName = user.displayName
-data.price = parseInt(data.price)
-data.inStock = parseInt(data.inStock)
-data.addedAt = new Date()
-  
-  axiosSecure.post('/book/add', data).then(res=>{
-    if (res.data.insertedId) {
-      navigate("/dashboard/my-books");
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Your book has been added",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-  })
+    data.librarianEmail = user.email;
+    data.librarianName = user.displayName;
+    data.price = parseInt(data.price);
+    data.inStock = parseInt(data.inStock);
+    data.addedAt = new Date();
+
+    axiosSecure.post("/book/add", data).then((res) => {
+      if (res.data.insertedId) {
+        navigate("/dashboard/my-books");
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your book has been added",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    });
   };
 
   return (
@@ -71,7 +68,6 @@ data.addedAt = new Date()
                   type="text"
                   placeholder="e.g. To Kill a Mockingbird"
                   className="input input-bordered w-full"
-                  // 5. Connect input to form using register
                   {...register("title", { required: true })}
                 />
                 {/* 6. Display error if field is empty */}
@@ -126,7 +122,7 @@ data.addedAt = new Date()
                 </label>
                 <select
                   className="select select-bordered w-full"
-                  defaultValue="Fiction" // Best practice for React selects
+                  defaultValue="Fiction"
                   {...register("category")}
                 >
                   <option value="Fiction">Fiction</option>

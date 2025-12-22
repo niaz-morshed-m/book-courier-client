@@ -23,7 +23,7 @@ const { data: counts = [], } = useQuery({
 });
 
 
- console.log(counts)
+
     return (
       <div>
         <p className="text-xl font-bold mt-2 text-center my-8">Admin Stats</p>

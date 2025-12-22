@@ -3,10 +3,11 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { MdAdminPanelSettings } from "react-icons/md";
 import Swal from "sweetalert2";
+import Loading from "../../../Components/Loading";
 
 const Users = () => {
   const axiosSecure = useAxiosSecure();
-  const { data: usersList = [], refetch } = useQuery({
+  const { data: usersList = [], refetch, isLoading } = useQuery({
     queryKey: ["all-users"],
     queryFn: async () => {
       const res = await axiosSecure.get("/users");
@@ -15,21 +16,6 @@ const Users = () => {
   });
   
 
-  //   const updateAdmin = (user)=>{
-  //     const updatedRole = {
-  //         role: "admin"
-  //     }
-  // axiosSecure
-  //   .patch(`/user/${user._id}`, updatedRole)
-  //   .then((res) => {
-  //   if (res.data.modifiedCount) {
-  //       console.log(res.data);
-  //       refetch();
-  //   }
-  //   })
-  //   .catch((err) => console.log(err));
-
-  //   }
   const handleAction = (user, role) => {
     const updatedRole = {
       role: role,
@@ -59,6 +45,12 @@ const Users = () => {
       }
     });
   };
+
+
+if (isLoading) {
+  return <Loading></Loading>;
+}
+
   return (
     <div>
       <p className="text-xl font-semibold mt-2">Users</p>

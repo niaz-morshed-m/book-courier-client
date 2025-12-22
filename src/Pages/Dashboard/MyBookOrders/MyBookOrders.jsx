@@ -4,12 +4,13 @@ import useAuth from '../../../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { FaCircleInfo } from 'react-icons/fa6';
+import Loading from '../../../Components/Loading';
 
 const MyBookOrders = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data: orders = [], refetch } = useQuery({
+    const { data: orders = [], refetch, isLoading } = useQuery({
       queryKey: ["myOrders", user?.email],
       queryFn: async () => {
         const res = await axiosSecure.get(`/order/librarian/${user.email}`);
@@ -49,7 +50,9 @@ Swal.fire({
 
  
  };
-
+if (isLoading) {
+  return <Loading></Loading>;
+}
 if(orders.length === 0 ){
     return (
       <div className="my-2.5">
