@@ -32,7 +32,7 @@ const Coverage = () => {
           {coverageData.map((district) => (
             <Marker position={[district.latitude, district.longitude]}>
               <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
+               Whole zilla
               </Popup>
             </Marker>
           ))}

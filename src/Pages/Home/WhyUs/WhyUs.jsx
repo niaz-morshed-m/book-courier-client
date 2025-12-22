@@ -45,6 +45,11 @@ const WhyUs = () => {
             <hr />
           </li>
         </ul>
+        <p className="text-center">
+          Our service is available across whole country, You can order from any
+          place of the country, <br/> we will reach that at your home with our
+          efficient delivery system.
+        </p>
       </div>
     );
 };
