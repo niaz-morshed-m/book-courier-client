@@ -37,7 +37,7 @@ const Users = () => {
           icon: "success",
         });
         axiosSecure.patch(`/user/role/${user._id}`, updatedRole).then((res) => {
-          console.log(res.data);
+      
           if (res.data.modifiedCount) {
             refetch();
           }

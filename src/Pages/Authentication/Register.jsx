@@ -87,7 +87,7 @@ axiosSecure.post('/user/create', userInfo).then(res=>{
       })
       .catch((error) => {
         const errorMessage = error.message;
-        console.log(errorMessage)
+   
       });
 
   };

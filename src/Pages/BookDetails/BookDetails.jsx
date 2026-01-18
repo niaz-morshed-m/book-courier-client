@@ -83,7 +83,7 @@ const { data: reviews = [], refetch: refetchReviews } = useQuery({
     data.librarianEmail = book.librarianEmail;
 
     const res = await axiosSecure.post("/order", data);
-    console.log(res.data);
+  
     if (res.data.orderId) {
       modalRef.current.close();
       reset();
@@ -190,7 +190,7 @@ if(isLoading){
 
   return (
     <div className="my-7">
-      <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
+      <div className="flex justify-center items-center min-h-screen p-4">
         <div className="card lg:card-side bg-base-100 shadow-xl max-w-5xl w-full border border-gray-100">
           <figure className="bg-[#0f1f38] lg:w-1/3 min-h-[300px] flex items-center justify-center">
             <img

@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import logo from "../../assets/Capwswsture-Photoroom.png"
-import { Link, NavLink, useNavigate } from 'react-router';
-import { IoMdPersonAdd } from 'react-icons/io';
-import { MdOutlineLogin, MdOutlineLogout } from 'react-icons/md';
-import useAuth from '../../hooks/useAuth';
-import Swal from 'sweetalert2';
-import Aos from 'aos';
+import React, { useEffect, useState } from "react";
+import logo from "../../assets/Capwswsture-Photoroom.png";
+import { Link, NavLink, useNavigate } from "react-router";
+import {
+  HiOutlineHome,
+  HiOutlineBookOpen,
+  HiOutlineInformationCircle,
+  HiOutlineViewGrid,
+  HiOutlineUserAdd,
+  HiOutlineLogin,
+  HiOutlineLogout,
+  HiOutlineSun,
+  HiOutlineMoon,
+} from "react-icons/hi";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import Aos from "aos";
+
 const NavBar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -13,39 +23,49 @@ const NavBar = () => {
   const links = (
     <>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/" className="flex items-center gap-2">
+          <HiOutlineHome />
+          Home
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/books">Books</NavLink>
+        <NavLink to="/books" className="flex items-center gap-2">
+          <HiOutlineBookOpen />
+          Books
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/dashboard">Dashboard</NavLink>
+        <NavLink to="/about" className="flex items-center gap-2">
+          <HiOutlineInformationCircle />
+          About
+        </NavLink>
       </li>
+      {user && (
+        <li>
+          <NavLink to="/dashboard" className="flex items-center gap-2">
+            <HiOutlineViewGrid />
+            Dashboard
+          </NavLink>
+        </li>
+      )}
     </>
   );
 
-  // 🌙 Theme State
+  // Theme state
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
-  // Apply theme
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const handleThemeToggle = (e) => {
-    setTheme(e.target.checked ? "dark" : "light");
-  };
+  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
-  // handle logout function
+  // Logout
   const handleLogout = () => {
     Swal.fire({
       title: "Do you want to Logout?",
       showDenyButton: true,
-      customClass: {
-        confirmButton: "my-confirm-btn",
-        denyButton: "my-deny-btn",
-      },
       confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
@@ -55,12 +75,21 @@ const NavBar = () => {
       }
     });
   };
+
   useEffect(() => {
     Aos.init();
   }, []);
+
   return (
-    <div className="sticky top-0 left-0 w-full z-50 navbar bg-base-100/50 backdrop-blur-md border border-white/20 shadow-sm rounded-xl">
-      <div className="navbar-start">
+    <div
+      className="
+        sticky top-2 z-50 navbar flex-wrap lg:flex-nowrap
+        bg-base-100/60 backdrop-blur-md border border-white/20 shadow-sm rounded-xl
+        w-full lg:w-[80%] mx-auto my-4 px-2 lg:px-0
+      "
+    >
+      {/* LEFT */}
+      <div className="navbar-start gap-2">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
             <svg
@@ -70,102 +99,84 @@ const NavBar = () => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              {" "}
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 6h16M4 12h8m-8 6h16"
-              />{" "}
+              />
             </svg>
           </div>
+
           <ul
-            tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box mt-3 w-52 p-2 shadow"
           >
             {links}
-            <div
-              className="tooltip tooltip-bottom mx-1 lg:hidden"
-              data-tip={
-                theme === "dark"
-                  ? "Switch to Light Mode"
-                  : "Switch to Dark Mode"
-              }
-            >
-              <span className='mr-2 text-xs ml-2'>Theme</span>
-              <input
-                type="checkbox"
-                className="toggle toggle-xs"
-                onChange={handleThemeToggle}
-                checked={theme === "dark"}
-              />
-            </div>
+            <li>
+              <button onClick={toggleTheme} className="flex items-center gap-2">
+                {theme === "dark" ? <HiOutlineSun /> : <HiOutlineMoon />}
+                {theme === "dark" ? "Light" : "Dark"}
+              </button>
+            </li>
           </ul>
         </div>
-        <img
-          className="btn btn-ghost lg:ml-0 md:ml-0 ml-[-15px] md:[h-40px] lg:h-[40px] h-[30px]"
-          src={logo}
-          alt=""
-        />
-      </div>
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">{links}</ul>
-      </div>
-      <div className="navbar-end">
-        <div
-          className="tooltip tooltip-bottom mx-4 hidden lg:block"
-          data-tip={
-            theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"
-          }
-        >
-          <input
-            type="checkbox"
-            className="toggle toggle-sm"
-            onChange={handleThemeToggle}
-            checked={theme === "dark"}
-          />
-        </div>
 
-        {user && (
-          <Link to="/dashboard/profile">
-            <div
-              className="avatar relative group m-4 tooltip tooltip-bottom"
-              data-tip="My Profile"
-            >
-              <div className="w-7 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 cursor-pointer">
-                <img src={user.photoURL} alt="User profile avatar" />
+        <img src={logo} alt="logo" className="h-7 lg:h-[40px]" />
+      </div>
+
+      {/* CENTER */}
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal gap-1">{links}</ul>
+      </div>
+
+      {/* RIGHT */}
+      <div className="navbar-end gap-1 sm:gap-3 flex-wrap">
+        {/* THEME ICON */}
+        <button onClick={toggleTheme} className="btn btn-ghost btn-circle">
+          {theme === "dark" ? <HiOutlineSun /> : <HiOutlineMoon />}
+        </button>
+
+        {/* AUTH */}
+        {user ? (
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} className="avatar cursor-pointer mr-3">
+              <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src={user.photoURL} alt="profile" />
               </div>
             </div>
-          </Link>
-        )}
-        {user ? (
-          <button
-            onClick={handleLogout}
-            className="btn m-1 lg:btn-md md:btn-md btn-xs bg-primary text-accent border-5 border-primary"
-          >
-            <span className="text-[18px] font-semibold">
-              <MdOutlineLogout />
-            </span>{" "}
-            Logout
-          </button>
+
+            <ul className="menu dropdown-content bg-base-100 rounded-box shadow w-48 mt-3 p-2">
+              <li className="text-sm font-semibold px-2">
+                {user.displayName || "User"}
+              </li>
+              <li>
+                <Link to="/dashboard/profile">My Profile</Link>
+              </li>
+              <div className="divider my-1"></div>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="text-error flex items-center gap-2"
+                >
+                  <HiOutlineLogout />
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
         ) : (
           <>
             <Link to="/register">
-              {" "}
-              <button className="btn lg:btn-md md:btn-md btn-xs bg-primary text-accent border-5 border-primary">
-                <span className="mr-1">
-                  <IoMdPersonAdd />
-                </span>{" "}
-                Register
+              <button className="btn btn-xs sm:btn-md btn-primary flex items-center gap-1">
+                <HiOutlineUserAdd />
+                <span className="hidden sm:inline">Register</span>
               </button>
             </Link>
             <Link to="/login">
-              {" "}
-              <button className="btn m-1 lg:btn-md md:btn-md btn-xs bg-primary text-accent border-5 border-primary">
-                <span className="text-[18px] font-semibold">
-                  <MdOutlineLogin />
-                </span>{" "}
-                Login
+              <button className="btn btn-xs sm:btn-md btn-primary flex items-center gap-1 mr-3">
+                <HiOutlineLogin />
+                <span className="hidden sm:inline">Login</span>
               </button>
             </Link>
           </>

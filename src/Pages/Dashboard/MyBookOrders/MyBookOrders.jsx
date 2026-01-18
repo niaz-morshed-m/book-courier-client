@@ -40,7 +40,7 @@ Swal.fire({
      .patch(`/order/${id}`, { status:  status})
      .then((res) => {
        refetch();
-       console.log(res.data);
+    
      })
      .catch((err) => console.log(err));
       }

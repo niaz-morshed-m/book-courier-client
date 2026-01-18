@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 
 // ✅ create instance OUTSIDE hook
 const axiosSecure = axios.create({
-  baseURL: "https://book-courier-server-rho.vercel.app",
+  baseURL: "https://book-courier-server-sand.vercel.app",
 });
 
 const useAxiosSecure = () => {

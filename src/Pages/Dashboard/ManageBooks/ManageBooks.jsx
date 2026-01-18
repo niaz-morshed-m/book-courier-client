@@ -63,7 +63,7 @@ Swal.fire({
       icon: "success",
     });
    axiosSecure.delete(`/book/${id}`).then((res) => {
-     console.log(res.data);
+     
      if (res.data.bookDeleted) {
        refetch();
      }

@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from "../../assets/Capwswsture-Photoroom.png"
 import { FaFacebook, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
+import { Link } from 'react-router';
 const Footer = () => {
     return (
       <div>
@@ -13,34 +14,65 @@ const Footer = () => {
               Providing reliable Service since 2010
             </p>
           </aside>
-          <nav>
-            <h6 className="footer-title">Services</h6>
-            <a className="link link-hover">Branding</a>
-            <a className="link link-hover">Design</a>
-            <a className="link link-hover">Marketing</a>
-            <a className="link link-hover">Advertisement</a>
-          </nav>
+
           <nav>
             <h6 className="footer-title">Contact Info.</h6>
-            <a className="link link- text-xl">
-              <FaFacebook></FaFacebook>
+
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link text-xl"
+              aria-label="Facebook"
+            >
+              <FaFacebook />
             </a>
-            <a className="link link- text-xl">
-              <FaLinkedin></FaLinkedin>
+
+            <a
+              href="https://www.linkedin.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link text-xl"
+              aria-label="LinkedIn"
+            >
+              <FaLinkedin />
             </a>
-            <a className="link link- text-xl">
-              <FaXTwitter></FaXTwitter>
+
+            <a
+              href="https://twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link text-xl"
+              aria-label="Twitter / X"
+            >
+              <FaXTwitter />
             </a>
-            <a className="link link-">bookcourier@admin.co</a>
+
+            <a
+              href="mailto:bookcourier@admin.co"
+              target="_blank"
+              className="link link-hover"
+            >
+              bookcourier@admin.co
+            </a>
           </nav>
+
           <nav>
             <h6 className="footer-title">Legal</h6>
-            <a className="link link-hover">Terms of use</a>
-            <a className="link link-hover">Privacy policy</a>
-            <a className="link link-hover">Cookie policy</a>
+            <Link to="/TermsOfUse" className="link link-hover">
+              Terms of Use
+            </Link>
+            <Link to="/PrivacyPolicy" className="link link-hover">
+              Privacy policy
+            </Link>
+            <Link to="/CookiePolicy" className="link link-hover">
+              Cookie policy
+            </Link>
           </nav>
         </footer>
-        <p className='text-center mb-6'>© All Rights Reserved by BookCourier Ltd.</p>
+        <p className="text-center my-6">
+          © All Rights Reserved by BookCourier Ltd.
+        </p>
       </div>
     );
 };

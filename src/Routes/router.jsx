@@ -24,6 +24,10 @@ import AdminRoute from "./AdminRoute";
 import LibrarianRoute from "./LibrarianRoute";
 import MyWishlist from "../Pages/Dashboard/MyWishlist/MyWishlist";
 import { FaCircleInfo } from "react-icons/fa6";
+import TermsOfUse from "../Pages/TermsOfUse/TermsOfUse";
+import PrivacyPolicy from "../Pages/PrivacyPolicy/PrivacyPolicy";
+import CookiePolicy from "../Pages/CookiePolicy/CookiePolicy";
+import AboutUs from "../Pages/AboutUs/AboutUs";
 
 export const router = createBrowserRouter([
   {
@@ -45,11 +49,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "book/details/:id",
-        element: (
-          <PrivateRoute>
-            <BookDetails></BookDetails>
-          </PrivateRoute>
-        ),
+        element: <BookDetails></BookDetails>,
       },
       {
         path: "/register",
@@ -58,6 +58,22 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login></Login>,
+      },
+      {
+        path: "/TermsOfUse",
+        element: <TermsOfUse></TermsOfUse>,
+      },
+      {
+        path: "/PrivacyPolicy",
+        element: <PrivacyPolicy></PrivacyPolicy>,
+      },
+      {
+        path: "/CookiePolicy",
+        element: <CookiePolicy></CookiePolicy>,
+      },
+      {
+        path: "/about",
+      element: <AboutUs></AboutUs>,
       },
     ],
   },

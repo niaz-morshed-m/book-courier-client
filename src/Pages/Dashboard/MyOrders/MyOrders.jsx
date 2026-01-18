@@ -22,7 +22,7 @@ const MyOrders = () => {
       return res.data;
     },
   });
-  console.log(orders);
+ 
   const cancelStatus = (id) => {
     Swal.fire({
       title: "You Want to Cancel the Order?",
@@ -43,7 +43,7 @@ const MyOrders = () => {
           .patch(`/order/${id}`, { status: "cancelled" })
           .then((res) => {
             refetch();
-            console.log(res.data);
+           
           })
           .catch((err) => console.log(err));
       }
