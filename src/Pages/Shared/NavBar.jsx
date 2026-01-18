@@ -122,7 +122,7 @@ const NavBar = () => {
           </ul>
         </div>
 
-        <img src={logo} alt="logo" className="h-7 lg:h-[40px]" />
+       <Link to="/"><img src={logo} alt="BookCourier Logo" className="lg:h-10 md:h-10 h-7" /></Link>
       </div>
 
       {/* CENTER */}
