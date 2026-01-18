@@ -45,7 +45,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
     },
   });
 
-
+console.log(book);
   useEffect(() => {
     if (book.price) {
       setTotal(book.price * quantity + deliveryCharge);
@@ -153,9 +153,9 @@ const handleReviewSubmit = async (e) => {
     bookTitle: book.title,
     rating,
     comment,
-    userName: user.displayName,
-    userEmail: user.email,
-    userPhoto: user.photoURL,
+    userName: user?.displayName,
+    userEmail: user?.email,
+    userPhoto: user?.photoURL,
   };
 
   try {
@@ -253,7 +253,7 @@ if(isLoading){
                       </label>
                       <input
                         type="text"
-                        value={user.displayName}
+                        value={user?.displayName}
                         placeholder="John Doe"
                         className="input input-bordered w-full"
                         {...register("fullName", { required: true })}
@@ -272,7 +272,7 @@ if(isLoading){
                         </span>
                       </label>
                       <input
-                        value={user.email}
+                        value={user?.email}
                         type="email"
                         placeholder="john@example.com"
                         className="input input-bordered w-full"
